@@ -21,6 +21,13 @@ namespace Application.Services
             return result;
         }
 
+        public async Task<PostDetailsDto> GetPost(Guid id)
+        {
+            var post = await _postRepository.GetByIdAsync(id);
+            var result = post.Adapt<PostDetailsDto>();
+            return result;
+        }
+
         public async Task Create(CreatePostDto createPostDto)
         {
             var post = createPostDto.Adapt<Post>();
