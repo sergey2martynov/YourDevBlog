@@ -1,0 +1,30 @@
+﻿using Application.Dtos.Blog;
+using Application.Interfaces;
+using Core.Entities;
+using Core.Repositories;
+using Mapster;
+namespace Application.Services
+{
+    public class PostService : IPostService
+    {
+        private readonly IPostRepository _postRepository;
+
+        public PostService(IPostRepository postRepository)
+        {
+            _postRepository = postRepository;
+        }
+
+        public async Task<List<GetPostDto>> GetAll()
+        {
+            var posts = await _postRepository.GetAllAsync();
+            var result = posts.Adapt<List<GetPostDto>>();
+            return result;
+        }
+
+        public async Task Create(CreatePostDto createPostDto)
+        {
+            var post = createPostDto.Adapt<Post>();
+            await _postRepository.AddAsync(post);
+        }
+    }
+}
