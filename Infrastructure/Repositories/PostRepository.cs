@@ -12,18 +12,18 @@ namespace Infrastructure.Repositories
         {
         }
 
-        public async override Task<IReadOnlyList<Post>> GetAllAsync()
-        {
-            var posts = await _dbContext.Set<Post>().OrderByDescending(p => p.CreatedOn).ToListAsync();
-            return posts;
-        }
-
         public override async Task<Post> GetByIdAsync(Guid id)
         {
             return await _dbContext.Set<Post>()
-                .Include(q => q.C)
+                .Include(q => q.Comments)
                 .Where(q => q.Id == id)
                 .SingleOrDefaultAsync();
+        }
+
+        public async Task CreateComment(Comment comment)
+        {
+            await _dbContext.Set<Comment>().AddAsync(comment);
+            _dbContext.SaveChanges();
         }
     }
 }

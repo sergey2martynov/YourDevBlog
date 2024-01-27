@@ -33,5 +33,11 @@ namespace Application.Services
             var post = createPostDto.Adapt<Post>();
             await _postRepository.AddAsync(post);
         }
+
+        public async Task CreateComment(CreateCommentDto createCommentDto)
+        {
+            var comment = createCommentDto.Adapt<Comment>();
+            await _postRepository.CreateComment(comment);
+        }
     }
 }

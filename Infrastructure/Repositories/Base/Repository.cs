@@ -15,7 +15,7 @@ namespace Infrastructure.Repositories.Base
 
         public virtual async Task<IReadOnlyList<T>> GetAllAsync()
         {
-            return await _dbContext.Set<T>().ToListAsync();
+            return await _dbContext.Set<T>().OrderByDescending(p => p.CreatedOn).ToListAsync();
         }
 
         public virtual async Task<T> GetByIdAsync(Guid id)

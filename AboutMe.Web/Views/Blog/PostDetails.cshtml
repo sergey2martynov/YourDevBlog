@@ -2,18 +2,80 @@
 
 <h2>Post details</h2>
 
-<form asp-controller="Blog" asp-action="CreatePost" method="post">
+<div class="form-group">
+    <div class="col-sm-2">
+        <label asp-for="Title"></label>
+    </div>
+    <div class="col-sm-10">
+        @Html.DisplayFor(model => model.Title)
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-2">
+        <label asp-for="Message"></label>
+    </div>
+    <div class="col-sm-10">
+        @Html.DisplayFor(model => model.Message)
+    </div>
+</div>
+
+<table class="table">
+    @foreach (var comment in Model.Comments)
+    {
+        <tr>
+            <td>
+                <div>
+                    @Html.DisplayFor(modelItem => comment.Message);
+                </div>
+            </td>
+        </tr>
+    }
+</table>
+
+<script>
+    function submitComment() {
+        var message = document.getElementById('messageInput').value;
+
+        // Формирование объекта CreateCommentDto
+        var commentDto = {
+            postId: '@Model.Id',
+            message: message
+        };
+
+        // Отправка данных в метод CreateComment
+        fetch('/Blog/CreateComment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(commentDto)
+        })
+            .then(response => {
+                // Обработка ответа, если необходимо
+                console.log(response);
+            })
+            .catch(error => {
+                // Обработка ошибок, если необходимо
+                console.error('Error:', error);
+            });
+    }
+</script>
+
+<form asp-controller="Blog" asp-action="CreateComment" method="post">
 
     <div class="form-group">
         <div class="col-sm-2">
-            <label asp-for="Title"></label>
+            <label>Message</label>
         </div>
+        <textarea id="messageInput" class="form-control col-sm-10"></textarea>
     </div>
 
     <div class="form-group">
-        <div class="col-sm-2">
-            <label asp-for="Message"></label>
+        <div class="offset-md-2 col-md-10">
+            <button type="btn-dark" onclick="submitComment()">Send</button>
         </div>
     </div>
 
 </form>
+
