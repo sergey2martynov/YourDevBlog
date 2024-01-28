@@ -44,11 +44,11 @@ namespace AboutMe.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateComment([FromBody] CreateCommentDto createCommentDto)
+        public async Task<IActionResult> CreateComment(CreateCommentDto createCommentDto)
         {            
             createCommentDto.UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
             await _postService.CreateComment(createCommentDto);
-            return RedirectToAction("Index");
+            return RedirectToAction("PostDetails", "Blog", new { id = createCommentDto.PostId });
         }
     }
 }

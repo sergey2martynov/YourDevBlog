@@ -33,47 +33,20 @@
     }
 </table>
 
-<script>
-    function submitComment() {
-        var message = document.getElementById('messageInput').value;
-
-        // Формирование объекта CreateCommentDto
-        var commentDto = {
-            postId: '@Model.Id',
-            message: message
-        };
-
-        // Отправка данных в метод CreateComment
-        fetch('/Blog/CreateComment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(commentDto)
-        })
-            .then(response => {
-                // Обработка ответа, если необходимо
-                console.log(response);
-            })
-            .catch(error => {
-                // Обработка ошибок, если необходимо
-                console.error('Error:', error);
-            });
-    }
-</script>
-
 <form asp-controller="Blog" asp-action="CreateComment" method="post">
 
     <div class="form-group">
         <div class="col-sm-2">
             <label>Message</label>
         </div>
-        <textarea id="messageInput" class="form-control col-sm-10"></textarea>
+        <textarea id="messageInput" name="message" class="form-control col-sm-10"></textarea>
     </div>
+
+    <input type="hidden" name="postId" value="@Model.Id" />
 
     <div class="form-group">
         <div class="offset-md-2 col-md-10">
-            <button type="btn-dark" onclick="submitComment()">Send</button>
+            <button type="submit" class="btn btn-dark">Send</button>
         </div>
     </div>
 
