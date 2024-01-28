@@ -1,23 +1,21 @@
 ﻿using Application.Dtos.Blog;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
-namespace AboutMe.Controllers
+namespace AboutMe.Web.Controllers
 {
-    public class BlogController : Controller
+    public class NotesController : Controller
     {
         private readonly IPostService _postService;
 
-        public BlogController(IPostService postService) 
+        public NotesController(IPostService postService)
         {
             _postService = postService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var isPrivate = false;
-            var posts = await _postService.GetAll(isPrivate);
+            var posts = await _postService.GetAll(true);
             var blog = new BlogDto
             {
                 Posts = posts
@@ -26,15 +24,15 @@ namespace AboutMe.Controllers
             return View(blog);
         }
 
-        public async Task<IActionResult> PostDetails(Guid id)
+        public async Task<IActionResult> NoteDetails(Guid id)
         {
             var post = await _postService.GetPost(id);
             return View(post);
         }
 
-        public IActionResult CreatePost() 
+        public IActionResult CreateNote()
         {
             return View();
-        }        
+        }
     }
 }

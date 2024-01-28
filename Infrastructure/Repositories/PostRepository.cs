@@ -25,5 +25,17 @@ namespace Infrastructure.Repositories
             await _dbContext.Set<Comment>().AddAsync(comment);
             _dbContext.SaveChanges();
         }
+
+        public async Task<List<Post>> GetPostsForBlog()
+        {
+            var posts = _dbContext.Set<Post>().Where(p => !p.IsPrivate);
+            return posts.ToList();
+        }
+
+        public async Task<List<Post>> GetPostsForNotes(Guid userId)
+        {
+            var posts = _dbContext.Set<Post>().Where(p => p.IsPrivate && p.UserId == userId);
+            return posts.ToList();
+        }
     }
 }
