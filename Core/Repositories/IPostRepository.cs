@@ -7,5 +7,6 @@ namespace Core.Repositories
         Task CreateComment(Comment comment);
         Task<List<Post>> GetPostsForBlog();
         Task<List<Post>> GetPostsForNotes(Guid userId);
+        Task DeleteAsync(Post entity);
     }
 }

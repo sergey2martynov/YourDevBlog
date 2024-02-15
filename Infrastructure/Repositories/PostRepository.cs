@@ -15,7 +15,7 @@ namespace Infrastructure.Repositories
         public override async Task<Post> GetByIdAsync(Guid id)
         {
             return await _dbContext.Set<Post>()
-                .Include(q => q.Comments)
+                .Include(q => q.Comments.OrderBy(c => c.CreatedOn))
                 .Where(q => q.Id == id)
                 .SingleOrDefaultAsync();
         }
@@ -23,19 +23,20 @@ namespace Infrastructure.Repositories
         public async Task CreateComment(Comment comment)
         {
             await _dbContext.Set<Comment>().AddAsync(comment);
-            _dbContext.SaveChanges();
         }
 
         public async Task<List<Post>> GetPostsForBlog()
         {
-            var posts = _dbContext.Set<Post>().Where(p => !p.IsPrivate);
-            return posts.ToList();
+            var posts = await _dbContext.Set<Post>().Where(p => !p.IsPrivate).OrderByDescending(p => p.CreatedOn).ToListAsync();
+            
+            return posts;
         }
 
         public async Task<List<Post>> GetPostsForNotes(Guid userId)
         {
-            var posts = _dbContext.Set<Post>().Where(p => p.IsPrivate && p.UserId == userId);
-            return posts.ToList();
+            var posts = await _dbContext.Set<Post>().Where(p => p.IsPrivate && p.UserId == userId)
+                .OrderByDescending(p => p.CreatedOn).ToListAsync();
+            return posts;
         }
     }
 }

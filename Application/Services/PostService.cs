@@ -5,6 +5,8 @@ using Core.Repositories;
 using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace Application.Services
 {
@@ -50,19 +52,43 @@ namespace Application.Services
         {
             var post = await _postRepository.GetByIdAsync(id);
             var result = post.Adapt<PostDetailsDto>();
+
             return result;
         }
 
         public async Task Create(CreatePostDto createPostDto)
         {
             var post = createPostDto.Adapt<Post>();
+            post.Preview = post.Message.Length > 300 ? post.Message.Substring(0, 300) + ".." : post.Message;
+
             await _postRepository.AddAsync(post);
+            await _postRepository.SaveChangesAsync();
         }
 
-        public async Task CreateComment(CreateCommentDto createCommentDto)
+        public async Task<ValidationResult> CreateComment(CreateCommentDto createCommentDto)
         {
+            if (string.IsNullOrEmpty(createCommentDto.Message))
+            {
+                return new ValidationResult(
+                "Comment cannot be empty",
+                new[] { nameof(PostDetailsDto.Comments) });
+            }
+
+            var user = await _userManager.FindByIdAsync(createCommentDto.UserId.ToString());
             var comment = createCommentDto.Adapt<Comment>();
+            comment.UserName = user.UserName;
+
             await _postRepository.CreateComment(comment);
+            await _postRepository.SaveChangesAsync();
+
+            return null;
+        }
+
+        public async Task DeletePost(Guid id)
+        {
+            var post = await _postRepository.GetByIdAsync(id);
+            await _postRepository.DeleteAsync(post);
+            await _postRepository.SaveChangesAsync();
         }
     }
 }

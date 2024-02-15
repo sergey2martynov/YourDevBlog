@@ -33,6 +33,6 @@ namespace AboutMe.Web.Controllers
         public IActionResult CreateNote()
         {
             return View();
-        }
+        }        
     }
 }

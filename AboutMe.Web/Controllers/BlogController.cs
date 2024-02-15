@@ -1,7 +1,6 @@
 ﻿using Application.Dtos.Blog;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace AboutMe.Controllers
 {
@@ -28,7 +27,7 @@ namespace AboutMe.Controllers
 
         public async Task<IActionResult> PostDetails(Guid id)
         {
-            var post = await _postService.GetPost(id);
+            var post = await _postService.GetPost(id);            
             return View(post);
         }
 

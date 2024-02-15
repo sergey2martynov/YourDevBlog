@@ -3,6 +3,7 @@
     public class Post : EntityBase
     {
         public string Message { get; set; }
+        public string Preview { get; set; }
         public string Title { get; set; }
         public ICollection<Comment> Comments { get; set;}
         public bool IsPrivate { get; set; }
