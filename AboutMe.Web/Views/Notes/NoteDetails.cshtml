@@ -2,21 +2,17 @@
 @{
 }
 
-<h2>Note details</h2>
+<form asp-area="" asp-controller="Post" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    <button type="submit" class="button">Delete</button>
+</form>
 
-<div class="form-group">
-    <div class="col-sm-2">
-        <label asp-for="Title"></label>
-    </div>
+<div class="form-group post-title">
     <div class="col-sm-10">
         @Html.DisplayFor(model => model.Title)
     </div>
 </div>
 
-<div class="form-group">
-    <div class="col-sm-2">
-        <label asp-for="Message"></label>
-    </div>
+<div class="form-group post-message">
     <div class="col-sm-10">
         @Html.DisplayFor(model => model.Message)
     </div>

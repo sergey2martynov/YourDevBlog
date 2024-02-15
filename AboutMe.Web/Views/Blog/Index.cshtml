@@ -2,36 +2,27 @@
 @{
     ViewData["Title"] = "Blog";
 }
-<div class="col-md-12 mb-3" >
-    <a asp-area="" asp-controller="Blog" asp-action="CreatePost" class="button">Create Post</a>
+<div class="col-md-12 mb-3">
+    <a class="button" asp-area="" asp-controller="Blog" asp-action="CreatePost" class="button">Create Post</a>
 </div>
-<table class="table">
-    @foreach (var post in Model.Posts)
-    {
-        <tr>
-            <td>
-                <a asp-area="" asp-controller="Blog" asp-action="PostDetails" asp-route-id="@post.Id">
-                    @Html.DisplayFor(title => post.Title)</a>
-                <div>
-                    @Html.DisplayFor(message => post.Message)
-                </div>
-            </td>
-        </tr>
-    }
-</table>
 
-<style>
-    .button {
-        background: silver;
-        box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
-        border: none;
-        border-radius: 0;
-        box-sizing: border-box;
-        color: transparent;
-        min-height: 23px;
-        min-width: 75px;
-        padding: 0 12px;
-        text-shadow: 0 0 #222;
-    }
-</style>
+<div class="table-wrapper">
+    <table>
+        @foreach (var post in Model.Posts)
+        {
+            <tr>
+                <td>
+                    <div class="blog-item">
+                        <a class="post-listing-title-post" asp-area="" asp-controller="Blog" asp-action="PostDetails" asp-route-id="@post.Id">
+                            @Html.DisplayFor(title => post.Title)
+                        </a>
+                        <div>
+                            @Html.DisplayFor(message => post.Preview)
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
 

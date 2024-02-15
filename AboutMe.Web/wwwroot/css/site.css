@@ -1,22 +1,145 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-size: 14px;
+}
+
+
+
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.post-message {
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.comments-section {
+    margin-top: 20px;
+}
+
+.comments-title {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.comment-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.comment-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    overflow: hidden;
+}
+
+    .comment-item:last-child {
+        margin-bottom: 0;
+    }
+
+.comment-form {
+    margin-top: 20px;
+}
+
+.post-listing-title-post {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between; /* Это выровняет элементы по краям */
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.comment-username {
+    margin-right: 10px;
+}
+
+.comment-date {
+    color: #666;
+}
+
+.comment-message {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.comment-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-item {
+    padding: 20px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.table-wrapper {
+    width: 100%; /* Ширина таблицы */
+}
+
+    .table-wrapper table {
+        width: 100%; /* Ширина таблицы */
+    }
+
+    .table-wrapper .blog-item {
+        width: 100%; /* Растягиваем блок на всю ширину таблицы */
+    }
+
+.button {
+    background: #e0e0e0; /* серый цвет фона */
+    border: 1px solid #ccc; /* белая граница */
+    border-radius: 0; /* убрать скругление углов */
+    box-sizing: border-box;
+    color: #000; /* черный цвет текста */
+    font-family: Arial, sans-serif; /* стандартный шрифт */
+    font-size: 14px;
+    padding: 8px 16px; /* увеличение отступов */
+    text-shadow: none; /* убрать текстовую тень */
+    cursor: pointer; /* изменить указатель мыши */
+    text-decoration: none; /* убрать подчеркивание текста */
+    font-weight: bold;
 }

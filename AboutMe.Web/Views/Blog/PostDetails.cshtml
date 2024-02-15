@@ -1,54 +1,44 @@
 ﻿@model Application.Dtos.Blog.PostDetailsDto
 
-<h2>Post details</h2>
-
-<div class="form-group">
-    <div class="col-sm-2">
-        <label asp-for="Title"></label>
-    </div>
-    <div class="col-sm-10">
-        @Html.DisplayFor(model => model.Title)
-    </div>
+<h2 class="post-title">@Html.DisplayFor(model => model.Title)</h2>
+<div class="post-message">
+    @Html.DisplayFor(model => model.Message)
 </div>
 
-<div class="form-group">
-    <div class="col-sm-2">
-        <label asp-for="Message"></label>
-    </div>
-    <div class="col-sm-10">
-        @Html.DisplayFor(model => model.Message)
-    </div>
-</div>
 
-<table class="table">
-    @foreach (var comment in Model.Comments)
-    {
-        <tr>
-            <td>
-                <div>
-                    @Html.DisplayFor(modelItem => comment.Message);
+<div class="comments-section">
+    <h3 class="comments-title">Comments</h3>
+    <ul class="comment-list">
+        @foreach (var comment in Model.Comments)
+        {
+            <li class="comment-item">
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <span class="comment-username">@comment.UserName</span>
+                        <span class="comment-date">@comment.CreatedOn.ToString("dd.MM.yyyy")</span>
+                    </div>
+                    <div class="comment-message">
+                        <p>@comment.Message</p>
+                    </div>
                 </div>
-            </td>
-        </tr>
-    }
-</table>
+            </li>
+        }
+    </ul>
+</div>
 
-<form asp-controller="Post" asp-action="CreateComment" method="post">
+@if (TempData["PostDetailsErrorMessage"] != null)
+{
+    <div class="text-danger h4">@TempData["PostDetailsErrorMessage"]</div>
+}
 
+<form class="comment-form" asp-controller="Post" asp-action="CreateComment" method="post">
     <div class="form-group">
-        <div class="col-sm-2">
-            <label>Message</label>
-        </div>
-        <textarea id="messageInput" name="message" class="form-control col-sm-10"></textarea>
+        <textarea id="messageInput" name="message" class="form-control" placeholder="Write your comment here..."></textarea>
+        <input type="hidden" name="postId" value="@Model.Id" />
     </div>
 
-    <input type="hidden" name="postId" value="@Model.Id" />
-
-    <div class="form-group">
-        <div class="offset-md-2 col-md-10">
-            <button type="submit" class="btn btn-dark">Send</button>
-        </div>
-    </div>
-
+    <div class="col-md-12 mb-3">
+        <button type="submit" class="button btn-dark">Send</button>
+    </div>    
 </form>
 
