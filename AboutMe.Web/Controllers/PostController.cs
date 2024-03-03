@@ -1,13 +1,12 @@
 ﻿using Application.Dtos.Blog;
 using Application.Interfaces;
-using Core.Entities;
-using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Text.Json;
 
 namespace AboutMe.Web.Controllers
 {
+    [Authorize]
     public class PostController : Controller
     {
         private readonly IPostService _postService;
@@ -15,18 +14,6 @@ namespace AboutMe.Web.Controllers
         public PostController(IPostService postService)
         {
             _postService = postService;
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreatePost(CreatePostDto createPostDto)
-        {
-            createPostDto.UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            await _postService.Create(createPostDto);
-
-            if(createPostDto.IsPrivate)
-                return RedirectToAction("Index", "Notes");
-
-            return RedirectToAction("Index", "Blog");
         }
 
         [HttpPost]
@@ -45,6 +32,21 @@ namespace AboutMe.Web.Controllers
                 TempData["PostDetailsErrorMessage"] = error.ErrorMessage;
                 return RedirectToAction("PostDetails", "Blog", new { Id = createCommentDto.PostId });
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(Guid id)
+        {
+            var post = await _postService.GetPostForUpdate(id);
+            return View(post);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(UpdatePostDto dto)
+        {
+            var post = await _postService.UpdatePost(dto);
+
+            return RedirectToAction("Update", dto);
         }
 
         [HttpPost]

@@ -12,12 +12,11 @@ namespace Infrastructure.Repositories
         {
         }
 
-        public override async Task<Post> GetByIdAsync(Guid id)
+        public override IQueryable<Post> GetByIdAsync(Guid id)
         {
-            return await _dbContext.Set<Post>()
+            return _dbContext.Set<Post>()
                 .Include(q => q.Comments.OrderBy(c => c.CreatedOn))
-                .Where(q => q.Id == id)
-                .SingleOrDefaultAsync();
+                .Where(q => q.Id == id);
         }
 
         public async Task CreateComment(Comment comment)

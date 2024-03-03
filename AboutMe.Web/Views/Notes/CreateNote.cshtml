@@ -5,7 +5,23 @@
 
 <h2>Create note</h2>
 
-<form asp-controller="Post" asp-action="CreatePost" method="post">
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>Validation errors:</strong>
+        <ul>
+            @foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            }
+        </ul>
+    </div>
+}
+
+<form asp-controller="Notes" asp-action="CreateNote" method="post">
 
     <div class="form-group">
         <div class="col-sm-2">

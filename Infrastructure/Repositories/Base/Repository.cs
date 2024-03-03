@@ -18,11 +18,10 @@ namespace Infrastructure.Repositories.Base
             return await _dbContext.Set<T>().OrderByDescending(p => p.CreatedOn).ToListAsync();
         }
 
-        public virtual async Task<T> GetByIdAsync(Guid id)
+        public virtual IQueryable<T> GetByIdAsync(Guid id)
         {
-            return await _dbContext.Set<T>()
-                .Where(q => q.Id == id)
-                .SingleOrDefaultAsync();
+            return _dbContext.Set<T>()
+                .Where(q => q.Id == id);
         }
 
         public async Task<T> AddAsync(T entity)

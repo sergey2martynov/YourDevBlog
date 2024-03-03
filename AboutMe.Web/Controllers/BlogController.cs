@@ -1,6 +1,7 @@
 ﻿using Application.Dtos.Blog;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AboutMe.Controllers
 {
@@ -34,6 +35,20 @@ namespace AboutMe.Controllers
         public IActionResult CreatePost() 
         {
             return View();
-        }        
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePost(CreatePostDto createPostDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(createPostDto);
+            }
+
+            createPostDto.UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _postService.Create(createPostDto);
+
+            return RedirectToAction("Index");
+        }
     }
 }

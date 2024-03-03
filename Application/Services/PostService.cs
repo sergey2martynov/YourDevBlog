@@ -5,8 +5,8 @@ using Core.Repositories;
 using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 
 namespace Application.Services
 {
@@ -50,8 +50,16 @@ namespace Application.Services
 
         public async Task<PostDetailsDto> GetPost(Guid id)
         {
-            var post = await _postRepository.GetByIdAsync(id);
+            var post = await _postRepository.GetByIdAsync(id).SingleOrDefaultAsync();
             var result = post.Adapt<PostDetailsDto>();
+
+            return result;
+        }
+
+        public async Task<GetUpdatePostDto> GetPostForUpdate(Guid id)
+        {
+            var post = await _postRepository.GetByIdAsync(id).SingleOrDefaultAsync();
+            var result = post.Adapt<GetUpdatePostDto>();
 
             return result;
         }
@@ -84,9 +92,18 @@ namespace Application.Services
             return null;
         }
 
+        public async Task<Post> UpdatePost(UpdatePostDto dto)
+        {
+            var post = await _postRepository.GetByIdAsync(dto.Id).SingleOrDefaultAsync();
+            post.Message = dto.Message;
+            await _postRepository.SaveChangesAsync();
+
+            return post;
+        }
+
         public async Task DeletePost(Guid id)
         {
-            var post = await _postRepository.GetByIdAsync(id);
+            var post = await _postRepository.GetByIdAsync(id).SingleOrDefaultAsync();
             await _postRepository.DeleteAsync(post);
             await _postRepository.SaveChangesAsync();
         }

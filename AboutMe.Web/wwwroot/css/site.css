@@ -143,3 +143,8 @@ body {
     text-decoration: none; /* убрать подчеркивание текста */
     font-weight: bold;
 }
+
+.textarea-post {
+    height: 600px;
+    width: 100%;
+}
