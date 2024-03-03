@@ -3,12 +3,14 @@ using Infrastructure;
 using Application.AppStart;
 using Core.Entities;
 using Microsoft.AspNetCore.Identity;
+using Core.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 builder.Services.AddContext(builder.Configuration.GetConnectionString("DefaultConnection"));
 builder.Services.AddServices();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 builder.Services.AddIdentity<User, Role>(options =>
 {

@@ -1,17 +1,24 @@
 ﻿using Application.Dtos.Blog;
 using Application.Interfaces;
+using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using AutoMapper;
+using Core.Repositories;
 
 namespace AboutMe.Web.Controllers
 {
     public class NotesController : Controller
     {
         private readonly IPostService _postService;
+        private readonly IMapper _mapper;
+        private readonly IPostRepository _postRepository;
 
-        public NotesController(IPostService postService)
+        public NotesController(IPostService postService, IMapper mapper, IPostRepository postRepository)
         {
             _postService = postService;
+            _mapper = mapper;
+            _postRepository = postRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -44,8 +51,12 @@ namespace AboutMe.Web.Controllers
                 return View(createPostDto);
             }
 
-            createPostDto.UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            await _postService.Create(createPostDto);
+            var post = _mapper.Map<Post>(createPostDto);
+            post.UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            post.IsPrivate = true;
+            post.Preview = post.Message.Length > 300 ? post.Message.Substring(0, 300) + ".." : post.Message;
+            await _postRepository.AddAsync(post);
+            await _postRepository.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }

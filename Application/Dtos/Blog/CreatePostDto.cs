@@ -7,8 +7,7 @@ namespace Application.Dtos.Blog
         [Required]
         public string Message { get; set; }
         [Required]
+        [MaxLength(132)]
         public string Title { get; set; }
-        public bool IsPrivate { get; set; }
-        public Guid UserId { get; set; }
     }
 }
