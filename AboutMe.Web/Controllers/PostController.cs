@@ -65,7 +65,7 @@ namespace AboutMe.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var post = await _postRepository.GetByIdAsync(id).SingleOrDefaultAsync();
+            var post = await _postRepository.GetById(id).SingleOrDefaultAsync();
 
             if(post == null)
             {

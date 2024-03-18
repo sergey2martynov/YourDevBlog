@@ -11,6 +11,8 @@ namespace Core.Mapping
             CreateMap<CreatePostDto, ExtendedCreatePostDto>();
             CreateMap<ExtendedCreatePostDto, Post>();
             CreateMap<CreateCommentDto, Comment>();
+            CreateMap<Post, FeedPostVm>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
             CreateMap<Post, PostDetailsDto>()
                 .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments.Select(c => new CommentDto
                 {
@@ -19,6 +21,8 @@ namespace Core.Mapping
                     CreatedOn = c.CreatedOn
                 })));
             CreateMap<PostDetailsDto, PostDetailsVm>();
+            CreateMap<Post, BlogPostVm>();
+            CreateMap<Post, PrivatePostVm>();
         }        
     }
 }

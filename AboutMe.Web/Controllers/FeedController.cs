@@ -17,13 +17,13 @@ namespace AboutMe.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var isPrivate = false;
-            var posts = await _postService.GetAll(isPrivate);
-            var blog = new BlogDto
+            var posts = await _postService.GetAllPublicPosts();
+            var feed = new FeedVm
             {
                 Posts = posts
             };
 
-            return View(blog);
+            return View(feed);
         }
     }
 }

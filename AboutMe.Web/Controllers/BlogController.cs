@@ -4,11 +4,13 @@ using Application.Interfaces;
 using AutoMapper;
 using Core.Constants;
 using Core.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace AboutMe.Controllers
 {
+    [Authorize]
     public class BlogController : BaseController
     {
         private readonly IPostService _postService;
@@ -25,9 +27,10 @@ namespace AboutMe.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var isPrivate = false;
-            var posts = await _postService.GetAll(isPrivate);
-            var blog = new BlogDto
+            var userId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var posts = await _postService.GetPublicPostsByUser(userId);
+
+            var blog = new BlogVm
             {
                 Posts = posts
             };

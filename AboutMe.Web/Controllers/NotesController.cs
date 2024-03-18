@@ -24,8 +24,8 @@ namespace AboutMe.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var posts = await _postService.GetAll(true);
-            var blog = new BlogDto
+            var posts = await _postService.GetPrivatePostsByUser();
+            var blog = new NotesVm
             {
                 Posts = posts
             };

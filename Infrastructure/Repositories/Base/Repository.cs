@@ -13,12 +13,12 @@ namespace Infrastructure.Repositories.Base
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public virtual async Task<IReadOnlyList<T>> GetAllAsync()
+        public virtual IQueryable<T> GetAll()
         {
-            return await _dbContext.Set<T>().OrderByDescending(p => p.CreatedOn).ToListAsync();
+            return _dbContext.Set<T>().OrderByDescending(p => p.CreatedOn);
         }
 
-        public virtual IQueryable<T> GetByIdAsync(Guid id)
+        public virtual IQueryable<T> GetById(Guid id)
         {
             return _dbContext.Set<T>()
                 .Where(q => q.Id == id);

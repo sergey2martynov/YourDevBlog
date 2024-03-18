@@ -29,44 +29,52 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<List<GetPostDto>> GetAll(bool isPrivate)
+        public async Task<List<FeedPostVm>> GetAllPublicPosts()
         {
-            var posts = new List<Post>();
-            if (!isPrivate)
-                posts = await _postRepository.GetPostsForBlog();
-            else
-            {
-                var user = _httpContextAccessor.HttpContext.User;
-                Guid userId;
-                if (user.Identity.IsAuthenticated)
-                {
-                    var currentUser = await _userManager.GetUserAsync(user);
-                    if (currentUser != null)
-                    {
-                        userId = currentUser.Id;
-                        posts = await _postRepository.GetPostsForNotes(userId);
-                    }
-                }                
-            }
-                
-            var result = posts.Adapt<List<GetPostDto>>();
-            return result;
+            var posts = await _postRepository.GetAll()
+                .Include(p => p.User)
+                .Where(p => !p.IsPrivate)
+                .Select(p => _mapper.Map<Post, FeedPostVm>(p))
+                .ToListAsync();
+
+            return posts;
+        }
+
+        public async Task<List<PrivatePostVm>> GetPrivatePostsByUser()
+        {
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var posts = await _postRepository.GetAll()
+                .Where(p => p.IsPrivate && p.UserId == user.Id)
+                .Select(p => _mapper.Map<Post, PrivatePostVm>(p))
+                .ToListAsync();
+
+            return posts;
+        }
+
+        public async Task<List<BlogPostVm>> GetPublicPostsByUser(Guid userId)
+        {
+            var posts = await _postRepository.GetAll()
+                .Where(p => p.UserId == userId && !p.IsPrivate)
+                .Select(p => _mapper.Map<BlogPostVm>(p))
+                .ToListAsync();
+
+            return posts;
         }
 
         public async Task<PostDetailsVm> GetPost(Guid id)
         {
             var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
 
-            var post = await _postRepository.GetByIdAsync(id)
+            var post = await _postRepository.GetById(id)                
                 .Include(q => q.Comments.OrderBy(c => c.CreatedOn))
                 .Include(p => p.User)
                 .Select(p => _mapper.Map<PostDetailsDto>(p))
                 .SingleOrDefaultAsync();
 
-            var postVm = _mapper.Map<PostDetailsVm>(post);
-
             if (post == null)
                 throw new NotFoundException(nameof(Post), id);
+
+            var postVm = _mapper.Map<PostDetailsVm>(post);            
 
             if(post.UserId == user.Id)
                 postVm.IsCanEdit = true;
@@ -76,7 +84,7 @@ namespace Application.Services
 
         public async Task<GetUpdatePostDto> GetPostForUpdate(Guid id)
         {
-            var post = await _postRepository.GetByIdAsync(id).SingleOrDefaultAsync();
+            var post = await _postRepository.GetById(id).SingleOrDefaultAsync();
             var result = post.Adapt<GetUpdatePostDto>();
 
             return result;
@@ -109,7 +117,7 @@ namespace Application.Services
 
         public async Task<Post> UpdatePost(UpdatePostDto dto)
         {
-            var post = await _postRepository.GetByIdAsync(dto.Id).SingleOrDefaultAsync();
+            var post = await _postRepository.GetById(dto.Id).SingleOrDefaultAsync();
             post.Message = dto.Message;
             await _postRepository.SaveChangesAsync();
 
