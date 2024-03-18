@@ -1,4 +1,5 @@
 ﻿using Application.Dtos.Identity;
+using Core.Constants;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -37,7 +38,7 @@ namespace AboutMe.Web.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction(PageNames.Index, ControllerNames.Home);
                 }
 
                 foreach (var error in result.Errors)
@@ -71,12 +72,12 @@ namespace AboutMe.Web.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Blog");
+                        return RedirectToAction(PageNames.Index, ControllerNames.Blog);
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, ErrorMessages.InvalidLoginAttempt);
                     return View(model);
                 }
             }
@@ -89,7 +90,7 @@ namespace AboutMe.Web.Controllers
         {
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(PageNames.Index, ControllerNames.Home);
         }
     }
 }

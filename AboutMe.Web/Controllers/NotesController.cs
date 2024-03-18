@@ -1,14 +1,14 @@
 ﻿using Application.Dtos.Blog;
 using Application.Interfaces;
-using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using AutoMapper;
 using Core.Repositories;
+using Core.Constants;
 
 namespace AboutMe.Web.Controllers
 {
-    public class NotesController : Controller
+    public class NotesController : BaseController
     {
         private readonly IPostService _postService;
         private readonly IMapper _mapper;
@@ -21,6 +21,7 @@ namespace AboutMe.Web.Controllers
             _postRepository = postRepository;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var posts = await _postService.GetAll(true);
@@ -32,12 +33,27 @@ namespace AboutMe.Web.Controllers
             return View(blog);
         }
 
+        [HttpGet]
         public async Task<IActionResult> NoteDetails(Guid id)
         {
-            var post = await _postService.GetPost(id);
-            return View(post);
+
+            if (TempData[ViewDataFields.ErrorMessage] != null)
+            {
+                ViewData[ViewDataFields.ErrorMessage] = TempData[ViewDataFields.ErrorMessage];
+            }
+
+            try
+            {
+                var post = await _postService.GetPost(id);
+                return View(post);
+            }
+            catch(Exception ex)
+            {
+                return RedirectToError(ex.Message);
+            }            
         }
 
+        [HttpGet]
         public IActionResult CreateNote()
         {
             return View();
@@ -51,14 +67,12 @@ namespace AboutMe.Web.Controllers
                 return View(createPostDto);
             }
 
-            var post = _mapper.Map<Post>(createPostDto);
+            var post = _mapper.Map<ExtendedCreatePostDto>(createPostDto);
             post.UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
             post.IsPrivate = true;
-            post.Preview = post.Message.Length > 300 ? post.Message.Substring(0, 300) + ".." : post.Message;
-            await _postRepository.AddAsync(post);
-            await _postRepository.SaveChangesAsync();
+            await _postService.Create(post);
 
-            return RedirectToAction("Index");
+            return RedirectToAction(PageNames.Index);
         }
     }
 }

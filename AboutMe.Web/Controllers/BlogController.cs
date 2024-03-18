@@ -1,14 +1,15 @@
-﻿using Application.Dtos.Blog;
+﻿using AboutMe.Web.Controllers;
+using Application.Dtos.Blog;
 using Application.Interfaces;
 using AutoMapper;
-using Core.Entities;
+using Core.Constants;
 using Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace AboutMe.Controllers
 {
-    public class BlogController : Controller
+    public class BlogController : BaseController
     {
         private readonly IPostService _postService;
         private readonly IPostRepository _postRepository;
@@ -21,6 +22,7 @@ namespace AboutMe.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var isPrivate = false;
@@ -33,12 +35,21 @@ namespace AboutMe.Controllers
             return View(blog);
         }
 
+        [HttpGet]
         public async Task<IActionResult> PostDetails(Guid id)
         {
-            var post = await _postService.GetPost(id);            
-            return View(post);
+            try
+            {
+                var post = await _postService.GetPost(id);
+                return View(post);
+            }
+            catch (Exception ex)
+            {
+               return RedirectToError(ex.Message);
+            }
         }
 
+        [HttpGet]
         public IActionResult CreatePost() 
         {
             return View();
@@ -52,14 +63,12 @@ namespace AboutMe.Controllers
                 return View(createPostDto);
             }
 
-            var post = _mapper.Map<Post>(createPostDto);
+            var post = _mapper.Map<ExtendedCreatePostDto>(createPostDto);
             post.UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
             post.IsPrivate = false;
-            post.Preview = post.Message.Length > 300 ? post.Message.Substring(0, 300) + ".." : post.Message;
-            await _postRepository.AddAsync(post);
-            await _postRepository.SaveChangesAsync();
+            await _postService.Create(post);
 
-            return RedirectToAction("Index");
+            return RedirectToAction(PageNames.Index);
         }
     }
 }

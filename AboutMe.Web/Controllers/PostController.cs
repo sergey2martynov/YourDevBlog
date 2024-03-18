@@ -1,19 +1,24 @@
 ﻿using Application.Dtos.Blog;
 using Application.Interfaces;
+using Core.Constants;
+using Core.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace AboutMe.Web.Controllers
 {
     [Authorize]
-    public class PostController : Controller
+    public class PostController : BaseController
     {
         private readonly IPostService _postService;
+        private readonly IPostRepository _postRepository;
 
-        public PostController(IPostService postService)
+        public PostController(IPostService postService, IPostRepository postRepository)
         {
             _postService = postService;
+            _postRepository = postRepository;
         }
 
         [HttpPost]
@@ -25,12 +30,12 @@ namespace AboutMe.Web.Controllers
 
             if (error == null)
             {
-                return RedirectToAction("PostDetails", "Blog", new { id = createCommentDto.PostId });
+                return RedirectToAction(PageNames.PostDetails, ControllerNames.Blog, new { id = createCommentDto.PostId });
             }
             else
             {
                 TempData["PostDetailsErrorMessage"] = error.ErrorMessage;
-                return RedirectToAction("PostDetails", "Blog", new { Id = createCommentDto.PostId });
+                return RedirectToAction(PageNames.PostDetails, ControllerNames.Blog, new { Id = createCommentDto.PostId });
             }
         }
 
@@ -46,14 +51,31 @@ namespace AboutMe.Web.Controllers
         {
             var post = await _postService.UpdatePost(dto);
 
-            return RedirectToAction("Update", dto);
+            if (post == null)
+            {
+                return RedirectToError(ErrorMessages.PostNotFound);
+            }
+
+            if(post.IsPrivate)
+                return RedirectToAction(PageNames.Index, ControllerNames.Notes);
+
+            return RedirectToAction(PageNames.Index, ControllerNames.Blog);
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _postService.DeletePost(id);
-            return RedirectToAction("Index", "Notes");
+            var post = await _postRepository.GetByIdAsync(id).SingleOrDefaultAsync();
+
+            if(post == null)
+            {
+                return RedirectToError(ErrorMessages.PostNotFound);
+            }
+
+            await _postRepository.DeleteAsync(post);
+            await _postRepository.SaveChangesAsync();
+
+            return RedirectToAction(PageNames.Index, ControllerNames.Notes);
         }
     }
 }

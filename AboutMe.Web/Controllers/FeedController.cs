@@ -13,6 +13,7 @@ namespace AboutMe.Web.Controllers
             _postService = postService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var isPrivate = false;

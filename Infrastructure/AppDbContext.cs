@@ -19,7 +19,6 @@ namespace Infrastructure
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Comment>().Property(c => c.UserName).HasMaxLength(256);
         }
     }
 }

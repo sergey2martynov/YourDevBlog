@@ -1,5 +1,8 @@
 ﻿using Application.Dtos.Blog;
+using Application.Exceptions;
 using Application.Interfaces;
+using AutoMapper;
+using Core.Constants;
 using Core.Entities;
 using Core.Repositories;
 using Mapster;
@@ -14,14 +17,16 @@ namespace Application.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<User> _userManager;
-        private readonly IPostRepository _postRepository;        
+        private readonly IPostRepository _postRepository;
+        private readonly IMapper _mapper;
 
         public PostService(IPostRepository postRepository, IHttpContextAccessor httpContextAccessor,
-            UserManager<User> userManager)
+            UserManager<User> userManager, IMapper mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
             _postRepository = postRepository;
+            _mapper = mapper;
         }
 
         public async Task<List<GetPostDto>> GetAll(bool isPrivate)
@@ -48,12 +53,25 @@ namespace Application.Services
             return result;
         }
 
-        public async Task<PostDetailsDto> GetPost(Guid id)
+        public async Task<PostDetailsVm> GetPost(Guid id)
         {
-            var post = await _postRepository.GetByIdAsync(id).SingleOrDefaultAsync();
-            var result = post.Adapt<PostDetailsDto>();
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
 
-            return result;
+            var post = await _postRepository.GetByIdAsync(id)
+                .Include(q => q.Comments.OrderBy(c => c.CreatedOn))
+                .Include(p => p.User)
+                .Select(p => _mapper.Map<PostDetailsDto>(p))
+                .SingleOrDefaultAsync();
+
+            var postVm = _mapper.Map<PostDetailsVm>(post);
+
+            if (post == null)
+                throw new NotFoundException(nameof(Post), id);
+
+            if(post.UserId == user.Id)
+                postVm.IsCanEdit = true;
+
+            return postVm;
         }
 
         public async Task<GetUpdatePostDto> GetPostForUpdate(Guid id)
@@ -64,9 +82,9 @@ namespace Application.Services
             return result;
         }
 
-        public async Task Create(CreatePostDto createPostDto)
+        public async Task Create(ExtendedCreatePostDto createPostDto)
         {
-            var post = createPostDto.Adapt<Post>();
+            var post = _mapper.Map<Post>(createPostDto);
             post.Preview = post.Message.Length > 300 ? post.Message.Substring(0, 300) + ".." : post.Message;
 
             await _postRepository.AddAsync(post);
@@ -78,14 +96,11 @@ namespace Application.Services
             if (string.IsNullOrEmpty(createCommentDto.Message))
             {
                 return new ValidationResult(
-                "Comment cannot be empty",
+                ErrorMessages.CommentEmpty,
                 new[] { nameof(PostDetailsDto.Comments) });
             }
 
-            var user = await _userManager.FindByIdAsync(createCommentDto.UserId.ToString());
-            var comment = createCommentDto.Adapt<Comment>();
-            comment.UserName = user.UserName;
-
+            var comment = _mapper.Map<Comment>(createCommentDto);
             await _postRepository.CreateComment(comment);
             await _postRepository.SaveChangesAsync();
 
@@ -99,13 +114,6 @@ namespace Application.Services
             await _postRepository.SaveChangesAsync();
 
             return post;
-        }
-
-        public async Task DeletePost(Guid id)
-        {
-            var post = await _postRepository.GetByIdAsync(id).SingleOrDefaultAsync();
-            await _postRepository.DeleteAsync(post);
-            await _postRepository.SaveChangesAsync();
         }
     }
 }

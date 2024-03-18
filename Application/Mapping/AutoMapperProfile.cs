@@ -8,7 +8,17 @@ namespace Core.Mapping
     {
         public AutoMapperProfile() 
         {
-            CreateMap<CreatePostDto, Post>();
+            CreateMap<CreatePostDto, ExtendedCreatePostDto>();
+            CreateMap<ExtendedCreatePostDto, Post>();
+            CreateMap<CreateCommentDto, Comment>();
+            CreateMap<Post, PostDetailsDto>()
+                .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments.Select(c => new CommentDto
+                {
+                    UserName = c.User.UserName,
+                    Message = c.Message,
+                    CreatedOn = c.CreatedOn
+                })));
+            CreateMap<PostDetailsDto, PostDetailsVm>();
         }        
     }
 }
