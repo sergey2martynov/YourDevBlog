@@ -1,13 +1,31 @@
 ﻿@model Application.Dtos.Identity.LoginDto
 
-<form asp-controller="Account" asp-action="Login" method="post">
-    <div>
-        <label>Email</label>
-        <input asp-for="Name" />
+<form class="login-form" asp-controller="Account" asp-action="Login" method="post">
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger" role="alert">
+            <ul>
+                @foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="login-form-group">
+        <label for="inputEmail">Email</label>
+        <input class="login-form-control" id="inputEmail" asp-for="Email" placeholder="Enter your email" required />
     </div>
-    <div>
-        <label>Password</label>
-        <input asp-for="Password" type="password" />
+
+    <div class="login-form-group">
+        <label for="inputPassword">Password</label>
+        <input class="login-form-control" id="inputPassword" asp-for="Password" type="password" placeholder="Enter your password" required />
     </div>
-    <button type="submit">Login</button>
+
+    <button class="button" type="submit">Login</button>
 </form>

@@ -5,9 +5,11 @@ using System.Security.Claims;
 using AutoMapper;
 using Core.Repositories;
 using Core.Constants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AboutMe.Web.Controllers
 {
+    [Authorize]
     public class NotesController : BaseController
     {
         private readonly IPostService _postService;

@@ -17,5 +17,10 @@ namespace AboutMe.Web.Controllers
             ViewData[ViewDataFields.ErrorMessage] = message;
             return View();
         }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
     }
 }

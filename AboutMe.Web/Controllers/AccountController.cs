@@ -32,10 +32,17 @@ namespace AboutMe.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userExists = await _userManager.FindByEmailAsync(registerDto.Email);
+                if (userExists != null)
+                {
+                    ModelState.AddModelError(string.Empty, ErrorMessages.EmailIsAlreadyTaken);
+                    return View(registerDto);
+                }
+
                 var user = new User { UserName = registerDto.Name, Email = registerDto.Email };
                 var result = await _userManager.CreateAsync(user, registerDto.Password);
 
-                if (result.Succeeded)
+                if (result.Succeeded )
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction(PageNames.Index, ControllerNames.Home);
@@ -62,7 +69,15 @@ namespace AboutMe.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Name, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if(user == null)
+                {
+                    ModelState.AddModelError(string.Empty, ErrorMessages.InvalidLoginAttempt);
+                    return View(model);
+                }
+
+                var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {
@@ -85,7 +100,7 @@ namespace AboutMe.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

@@ -1,20 +1,37 @@
 ﻿@model Application.Dtos.Identity.RegisterDto
-@{
-}
 
-<form asp-controller="Account" asp-action="Register" method="post">
-    <div>
+<form class="login-form"  asp-controller="Account" asp-action="Register" method="post">
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger" role="alert">
+            <ul>
+                @foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="login-form-group">
         <label asp-for="Name"></label>
-        <input asp-for="Name" />
+        <input class="login-form-control" asp-for="Name" />
     </div>
-    <div>
+
+    <div class="login-form-group">
         <label asp-for="Email"></label>
-        <input asp-for="Email" />
+        <input class="login-form-control" asp-for="Email" />
     </div>
-    <div>
+
+    <div class="login-form-group">
         <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" />
+        <input class="login-form-control" asp-for="Password" type="password" />
     </div>
-    <button type="submit">Register</button>
+
+    <button class="button" type="submit">Register</button>
 </form>
 
