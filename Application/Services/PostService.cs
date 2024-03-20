@@ -66,7 +66,7 @@ namespace Application.Services
             var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
 
             var post = await _postRepository.GetById(id)                
-                .Include(q => q.Comments.OrderBy(c => c.CreatedOn))
+                .Include(q => q.Comments.OrderBy(c => c.CreatedOn)).ThenInclude(q => q.User)
                 .Include(p => p.User)
                 .Select(p => _mapper.Map<PostDetailsDto>(p))
                 .SingleOrDefaultAsync();
@@ -82,18 +82,10 @@ namespace Application.Services
             return postVm;
         }
 
-        public async Task<GetUpdatePostDto> GetPostForUpdate(Guid id)
-        {
-            var post = await _postRepository.GetById(id).SingleOrDefaultAsync();
-            var result = post.Adapt<GetUpdatePostDto>();
-
-            return result;
-        }
-
         public async Task Create(ExtendedCreatePostDto createPostDto)
         {
             var post = _mapper.Map<Post>(createPostDto);
-            post.Preview = post.Message.Length > 300 ? post.Message.Substring(0, 300) + ".." : post.Message;
+            post.Preview = TruncateText(post.Message, NumberValues.PostPreviewLength);
 
             await _postRepository.AddAsync(post);
             await _postRepository.SaveChangesAsync();
@@ -119,9 +111,21 @@ namespace Application.Services
         {
             var post = await _postRepository.GetById(dto.Id).SingleOrDefaultAsync();
             post.Message = dto.Message;
+            post.Preview = TruncateText(post.Message, NumberValues.PostPreviewLength);
             await _postRepository.SaveChangesAsync();
 
             return post;
+        }
+
+        private string TruncateText(string text, int length)
+        {
+            if (string.IsNullOrEmpty(text) || text.Length <= length)
+                return text;
+
+            var truncatedText = text.Substring(0, length);
+            truncatedText += "..";
+
+            return truncatedText;
         }
     }
 }

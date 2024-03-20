@@ -8,7 +8,6 @@ namespace Application.Interfaces
     {
         Task<List<FeedPostVm>> GetAllPublicPosts();
         Task<PostDetailsVm> GetPost(Guid id);
-        Task<GetUpdatePostDto> GetPostForUpdate(Guid id);
         Task<List<BlogPostVm>> GetPublicPostsByUser(Guid userId);
         Task<List<PrivatePostVm>> GetPrivatePostsByUser();
         Task Create(ExtendedCreatePostDto createPostDto);

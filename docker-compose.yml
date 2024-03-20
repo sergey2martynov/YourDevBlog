@@ -1,0 +1,17 @@
+services:
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: griffin1288
+      MYSQL_DATABASE: AboutMe
+      MYSQL_PASSWORD: griffin1288
+    ports:
+      - "3307:3306"
+  aboutme.web:
+    build:
+      context: .
+      dockerfile: AboutMe.Web/Dockerfile
+    ports:
+      - "8000:80"
+    depends_on:
+      - db

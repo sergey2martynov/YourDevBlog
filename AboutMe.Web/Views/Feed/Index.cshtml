@@ -13,6 +13,10 @@
             <tr>
                 <td>
                     <div class="blog-item">
+                        <div class="comment-header">
+                            <span class="comment-username">@post.UserName</span>
+                            <span class="comment-date">@post.CreatedOn.ToString("dd.MM.yyyy")</span>
+                        </div>
                         <a class="post-listing-title-post" asp-area="" asp-controller="Blog" asp-action="PostDetails" asp-route-id="@post.Id">
                             @Html.DisplayFor(title => post.Title)
                         </a>

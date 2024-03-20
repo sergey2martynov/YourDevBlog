@@ -1,6 +1,6 @@
 ﻿namespace Application.Dtos.Blog
 {
-    public class GetUpdatePostDto
+    public class UpdatePostVm
     {
         public Guid Id { get; set; }
         public string Title { get; set; }

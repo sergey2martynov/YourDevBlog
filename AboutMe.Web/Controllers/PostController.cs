@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.Blog;
 using Application.Interfaces;
+using AutoMapper;
 using Core.Constants;
 using Core.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -14,11 +15,13 @@ namespace AboutMe.Web.Controllers
     {
         private readonly IPostService _postService;
         private readonly IPostRepository _postRepository;
+        private readonly IMapper _mapper;
 
-        public PostController(IPostService postService, IPostRepository postRepository)
+        public PostController(IPostService postService, IPostRepository postRepository, IMapper mapper)
         {
             _postService = postService;
             _postRepository = postRepository;
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -42,7 +45,10 @@ namespace AboutMe.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(Guid id)
         {
-            var post = await _postService.GetPostForUpdate(id);
+            var post = await _postRepository.GetById(id)
+                .Select(p => _mapper.Map<UpdatePostVm>(p))
+                .SingleOrDefaultAsync();
+
             return View(post);
         }
 
@@ -75,7 +81,10 @@ namespace AboutMe.Web.Controllers
             await _postRepository.DeleteAsync(post);
             await _postRepository.SaveChangesAsync();
 
-            return RedirectToAction(PageNames.Index, ControllerNames.Notes);
+            if (post.IsPrivate)
+                return RedirectToAction(PageNames.Index, ControllerNames.Notes);
+
+            return RedirectToAction(PageNames.Index, ControllerNames.Blog);
         }
     }
 }

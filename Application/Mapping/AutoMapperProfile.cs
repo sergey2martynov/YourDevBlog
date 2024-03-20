@@ -14,7 +14,7 @@ namespace Core.Mapping
             CreateMap<Post, FeedPostVm>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
             CreateMap<Post, PostDetailsDto>()
-                .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments.Select(c => new CommentDto
+                .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments.Select(c => new CommentVm
                 {
                     UserName = c.User.UserName,
                     Message = c.Message,
@@ -23,6 +23,7 @@ namespace Core.Mapping
             CreateMap<PostDetailsDto, PostDetailsVm>();
             CreateMap<Post, BlogPostVm>();
             CreateMap<Post, PrivatePostVm>();
+            CreateMap<Post, UpdatePostVm>();
         }        
     }
 }

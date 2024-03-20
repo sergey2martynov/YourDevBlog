@@ -1,6 +1,6 @@
 ﻿namespace Application.Dtos.Blog
 {
-    public class CommentDto
+    public class CommentVm
     {
         public string UserName { get; set; }
         public string Message { get; set; }
