@@ -1,17 +1,32 @@
+version: '3.8'
+
 services:
+  
   db:
     image: mysql:latest
+    container_name: mysql_database
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: griffin1288
-      MYSQL_DATABASE: AboutMe
-      MYSQL_PASSWORD: griffin1288
+      MYSQL_DATABASE: MemoHubDb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: b1234567
+      MYSQL_ROOT_PASSWORD: c1234567
     ports:
-      - "3307:3306"
+      - "3306:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+
   aboutme.web:
     build:
       context: .
       dockerfile: AboutMe.Web/Dockerfile
+    container_name: aspnetmvc_web
     ports:
       - "8000:80"
+    volumes:
+        - ./AboutMe.Web:/app
+        - ./Application:/Application
+        - ./Core:/Core
+        - ./Infrastructure:/Infrastructure
     depends_on:
       - db
