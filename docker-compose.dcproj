@@ -4,7 +4,7 @@
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
     <DockerPublishLocally>False</DockerPublishLocally>
-    <ProjectGuid>c5027240-d6e7-4648-a54e-a6ce6468a63e</ProjectGuid>
+    <ProjectGuid>326310c4-e23d-418e-8153-479f97340c00</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>aboutme.web</DockerServiceName>
