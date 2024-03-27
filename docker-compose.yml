@@ -1,23 +1,28 @@
-version: '3.4'
+version: '3.8'
 
+networks:
+  memohub-network:
+    driver: bridge
 services:
   aboutme.web:
-    image: ${DOCKER_REGISTRY-}aboutmeweb
     build:
       context: .
       dockerfile: AboutMe.Web/Dockerfile    
     restart: always
     ports:
       - "8080:80"
+    networks:
+      - memohub-network
     depends_on:
       - db
 
   db:
-    image: mysql:latest
-    environment:
-      MYSQL_DATABASE: MemoHubDb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: b1234567
-      MYSQL_ROOT_PASSWORD: c1234567
+    image: postgres:latest
+    environment:      
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: b123
+      POSTGRES_DB: memohubdb
     ports:
-      - "3307:3306"
+      - "5432:5432"
+    networks:
+      - memohub-network
