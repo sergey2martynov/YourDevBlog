@@ -17,12 +17,13 @@ services:
       - db
 
   db:
-    image: postgres:latest
-    environment:      
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: b123
-      POSTGRES_DB: memohubdb
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: MemoHubDb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: b1234567
+      MYSQL_ROOT_PASSWORD: c1234567
     ports:
-      - "5432:5432"
+      - "3306:3306"
     networks:
       - memohub-network

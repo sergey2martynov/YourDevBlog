@@ -7,7 +7,7 @@ namespace Infrastructure
     {
         public static IServiceCollection AddContext(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
             return services;
         }
     }
