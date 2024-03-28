@@ -1,0 +1,22 @@
+﻿.login-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.login-form-group {
+    margin-bottom: 20px;
+}
+
+.login-label {
+    font-weight: bold;
+}
+
+.login-form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+}
