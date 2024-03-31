@@ -1,4 +1,4 @@
-﻿namespace Application.Dtos.Blog
+﻿namespace Application.ViewModels
 {
     public class UpdatePostVm
     {

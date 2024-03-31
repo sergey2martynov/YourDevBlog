@@ -1,4 +1,6 @@
-﻿namespace Application.Dtos.Blog
+﻿using Application.ViewModels;
+
+namespace Application.Dtos.Blog
 {
     public class PostDetailsDto
     {

@@ -6,6 +6,7 @@ using AutoMapper;
 using Core.Repositories;
 using Core.Constants;
 using Microsoft.AspNetCore.Authorization;
+using Application.ViewModels;
 
 namespace AboutMe.Web.Controllers
 {
