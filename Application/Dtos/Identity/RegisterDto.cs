@@ -1,6 +1,6 @@
 ﻿namespace Application.Dtos.Identity
 {
-    public class RegisterDto
+    public class RegisterDTO
     {
         public string Name { get; set; }
         public string Email { get; set; }

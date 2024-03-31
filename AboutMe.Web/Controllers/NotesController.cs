@@ -38,7 +38,6 @@ namespace AboutMe.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> NoteDetails(Guid id)
         {
-
             if (TempData[ViewDataFields.ErrorMessage] != null)
             {
                 ViewData[ViewDataFields.ErrorMessage] = TempData[ViewDataFields.ErrorMessage];
@@ -49,10 +48,10 @@ namespace AboutMe.Web.Controllers
                 var post = await _postService.GetPost(id);
                 return View(post);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return RedirectToError(ex.Message);
-            }            
+            }
         }
 
         [HttpGet]

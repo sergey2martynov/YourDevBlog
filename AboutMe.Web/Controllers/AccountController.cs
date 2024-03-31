@@ -24,23 +24,29 @@ namespace AboutMe.Web.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View();
+            return View(PageNames.Register);
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View(PageNames.Login);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        public async Task<IActionResult> Register(RegisterDTO registerDTO)
         {
             if (ModelState.IsValid)
             {
-                var userExists = await _userManager.FindByEmailAsync(registerDto.Email);
+                var userExists = await _userManager.FindByEmailAsync(registerDTO.Email);
                 if (userExists != null)
                 {
                     ModelState.AddModelError(string.Empty, ErrorMessages.EmailIsAlreadyTaken);
-                    return View(registerDto);
+                    return View(registerDTO);
                 }
 
-                var user = new User { UserName = registerDto.Name, Email = registerDto.Email };
-                var result = await _userManager.CreateAsync(user, registerDto.Password);
+                var user = new User { UserName = registerDTO.Name, Email = registerDTO.Email };
+                var result = await _userManager.CreateAsync(user, registerDTO.Password);
 
                 if (result.Succeeded )
                 {
@@ -54,36 +60,30 @@ namespace AboutMe.Web.Controllers
                 }
             }
 
-            return View(registerDto);
-        }
-
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+            return View(registerDTO);
+        }        
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginDto model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginDTO loginDTO, string returnURL = null)
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
+                var user = await _userManager.FindByEmailAsync(loginDTO.Email);
 
                 if(user == null)
                 {
                     ModelState.AddModelError(string.Empty, ErrorMessages.InvalidLoginAttempt);
-                    return View(model);
+                    return View(loginDTO);
                 }
 
-                var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(user.UserName, loginDTO.Password, loginDTO.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {
-                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    if (!string.IsNullOrEmpty(returnURL) && Url.IsLocalUrl(returnURL))
                     {
-                        return Redirect(returnUrl);
+                        return Redirect(returnURL);
                     }
                     else
                     {
@@ -93,11 +93,11 @@ namespace AboutMe.Web.Controllers
                 else
                 {
                     ModelState.AddModelError(string.Empty, ErrorMessages.InvalidLoginAttempt);
-                    return View(model);
+                    return View(loginDTO);
                 }
             }
 
-            return View(model);
+            return View(loginDTO);
         }
 
         [HttpGet]
