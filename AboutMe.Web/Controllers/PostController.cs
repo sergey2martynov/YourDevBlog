@@ -1,4 +1,5 @@
-﻿using Application.Dtos.Blog;
+﻿using AboutMe.Web.Extensions;
+using Application.Dtos.Blog;
 using Application.Interfaces;
 using Application.ViewModels;
 using AutoMapper;
@@ -18,7 +19,9 @@ namespace AboutMe.Web.Controllers
         private readonly IPostRepository _postRepository;
         private readonly IMapper _mapper;
 
-        public PostController(IPostService postService, IPostRepository postRepository, IMapper mapper)
+        public PostController(IPostService postService,
+            IPostRepository postRepository,
+            IMapper mapper)
         {
             _postService = postService;
             _postRepository = postRepository;
@@ -28,20 +31,17 @@ namespace AboutMe.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateComment(CreateCommentDTO createCommentDto)
         {
-            createCommentDto.UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            var error = await _postService.CreateComment(createCommentDto);
-
-            if (error == null)
-            {
-                return RedirectToAction(PageNames.PostDetails, ControllerNames.Blog, new { id = createCommentDto.PostId });
-            }
-            else
             if (!ModelState.IsValid)
             {
                 return RedirectToAction(PageNames.PostDetails.ToString(), ControllerNames.Blog.ToString(),
                     new { id = createCommentDto.PostId });
             }
+
+            var userId = User.GetId();
+            await _postService.CreateComment(createCommentDto, userId);
+
+            return RedirectToAction(PageNames.PostDetails.ToString(), ControllerNames.Blog.ToString(),
+                new { id = createCommentDto.PostId });
         }
 
         [HttpGet]
@@ -80,7 +80,7 @@ namespace AboutMe.Web.Controllers
                 return RedirectToError(ErrorMessages.PostNotFound);
             }
 
-            await _postRepository.DeleteAsync(post);
+            _postRepository.Delete(post);
             await _postRepository.SaveChangesAsync();
 
             if (post.IsPrivate)

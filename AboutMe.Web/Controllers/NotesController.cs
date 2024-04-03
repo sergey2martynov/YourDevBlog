@@ -18,7 +18,9 @@ namespace AboutMe.Web.Controllers
         private readonly IMapper _mapper;
         private readonly IPostRepository _postRepository;
 
-        public NotesController(IPostService postService, IMapper mapper, IPostRepository postRepository)
+        public NotesController(IPostService postService,
+            IMapper mapper,
+            IPostRepository postRepository)
         {
             _postService = postService;
             _mapper = mapper;
@@ -28,8 +30,9 @@ namespace AboutMe.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var posts = await _postService.GetPrivatePostsByUser();
-            var blog = new NotesVm
+            var userId = User.GetId();
+            var posts = await _postService.GetPrivatePostsByUser(userId);
+            var blog = new NotesVM
             {
                 Posts = posts
             };
@@ -40,14 +43,10 @@ namespace AboutMe.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> NoteDetails(Guid id)
         {
-            if (TempData[ViewDataFields.ErrorMessage] != null)
-            {
-                ViewData[ViewDataFields.ErrorMessage] = TempData[ViewDataFields.ErrorMessage];
-            }
-
             try
             {
-                var post = await _postService.GetPost(id);
+                var userId = User.GetId();
+                var post = await _postService.GetPost(id, userId);
                 return View(post);
             }
             catch (Exception ex)
@@ -70,10 +69,8 @@ namespace AboutMe.Web.Controllers
                 return View(createPostDto);
             }
 
-            var post = _mapper.Map<ExtendedCreatePostDto>(createPostDto);
-            post.UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            post.IsPrivate = true;
-            await _postService.Create(post);
+            var userId = User.GetId();
+            await _postService.Create(createPostDto, userId);
 
             return RedirectToAction(PageNames.Index.ToString());
         }

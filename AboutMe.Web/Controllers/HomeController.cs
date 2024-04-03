@@ -1,4 +1,4 @@
-﻿using Core.Constants;
+﻿using Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AboutMe.Web.Controllers
@@ -14,8 +14,12 @@ namespace AboutMe.Web.Controllers
         [HttpGet]
         public IActionResult Error(string message)
         {
-            ViewData[ViewDataFields.ErrorMessage] = message;
-            return View();
+            var errorVm = new ErrorVM
+            {
+                Message = message,
+            };
+
+            return View(errorVm);
         }
 
         public IActionResult Privacy()

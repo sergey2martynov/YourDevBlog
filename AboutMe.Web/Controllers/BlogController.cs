@@ -19,7 +19,9 @@ namespace AboutMe.Controllers
         private readonly IPostRepository _postRepository;
         private readonly IMapper _mapper;
 
-        public BlogController(IPostService postService, IPostRepository postRepository, IMapper mapper) 
+        public BlogController(IPostService postService,
+            IPostRepository postRepository,
+            IMapper mapper) 
         {
             _postService = postService;
             _postRepository = postRepository;
@@ -43,15 +45,9 @@ namespace AboutMe.Controllers
         [HttpGet]
         public async Task<IActionResult> PostDetails(Guid id)
         {
-            try
-            {
-                var post = await _postService.GetPost(id);
-                return View(post);
-            }
-            catch (Exception ex)
-            {
-               return RedirectToError(ex.Message);
-            }
+            var userId = User.GetId();
+            var post = await _postService.GetPost(id, userId);
+            return View(post);
         }
 
         [HttpGet]
@@ -68,10 +64,8 @@ namespace AboutMe.Controllers
                 return View(createPostDto);
             }
 
-            var post = _mapper.Map<ExtendedCreatePostDto>(createPostDto);
-            post.UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            post.IsPrivate = false;
-            await _postService.Create(post);
+            var userId = User.GetId();
+            await _postService.Create(createPostDto, userId);
 
             return RedirectToAction(PageNames.Index.ToString());
         }

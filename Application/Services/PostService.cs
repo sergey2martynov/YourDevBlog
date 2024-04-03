@@ -15,99 +15,92 @@ namespace Application.Services
 {
     public class PostService : IPostService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly UserManager<User> _userManager;
         private readonly IPostRepository _postRepository;
+        private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;
 
-        public PostService(IPostRepository postRepository, IHttpContextAccessor httpContextAccessor,
-            UserManager<User> userManager, IMapper mapper)
+        public PostService(IPostRepository postRepository,
+            IMapper mapper,
+            ICommentRepository commentRepository)
         {
-            _httpContextAccessor = httpContextAccessor;
-            _userManager = userManager;
             _postRepository = postRepository;
+            _commentRepository = commentRepository;
             _mapper = mapper;
         }
 
-        public async Task<List<FeedPostVm>> GetAllPublicPosts()
+        public async Task<List<FeedPostVM>> GetAllPublicPosts()
         {
             var posts = await _postRepository.GetAll()
                 .Include(p => p.User)
                 .Where(p => !p.IsPrivate)
-                .Select(p => _mapper.Map<Post, FeedPostVm>(p))
+                .Select(p => _mapper.Map<Post, FeedPostVM>(p))
                 .ToListAsync();
 
             return posts;
         }
 
-        public async Task<List<PrivatePostVm>> GetPrivatePostsByUser()
+        public async Task<List<NoteVM>> GetPrivatePostsByUser(Guid userId)
         {
-            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+
             var posts = await _postRepository.GetAll()
-                .Where(p => p.IsPrivate && p.UserId == user.Id)
-                .Select(p => _mapper.Map<Post, PrivatePostVm>(p))
+                .Where(p => p.IsPrivate && p.UserId == userId)
+                .Select(p => _mapper.Map<Post, NoteVM>(p))
                 .ToListAsync();
 
             return posts;
         }
 
-        public async Task<List<BlogPostVm>> GetPublicPostsByUser(Guid userId)
+        public async Task<List<BlogPostVM>> GetPublicPostsByUser(Guid userId)
         {
             var posts = await _postRepository.GetAll()
                 .Where(p => p.UserId == userId && !p.IsPrivate)
-                .Select(p => _mapper.Map<BlogPostVm>(p))
+                .Select(p => _mapper.Map<BlogPostVM>(p))
                 .ToListAsync();
 
             return posts;
         }
 
-        public async Task<PostDetailsVm> GetPost(Guid id)
+        public async Task<PostDetailsVM> GetPost(Guid id, Guid userId)
         {
-            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
 
             var post = await _postRepository.GetById(id)                
                 .Include(q => q.Comments.OrderBy(c => c.CreatedOn)).ThenInclude(q => q.User)
                 .Include(p => p.User)
-                .Select(p => _mapper.Map<PostDetailsDto>(p))
+                .Select(p => _mapper.Map<PostDetailsDTO>(p))
                 .SingleOrDefaultAsync();
 
             if (post == null)
+            {
                 throw new NotFoundException(nameof(Post), id);
+            }
 
-            var postVm = _mapper.Map<PostDetailsVm>(post);            
+            var postVm = _mapper.Map<PostDetailsVM>(post);            
 
-            if(post.UserId == user.Id)
+            if(post.UserId == userId)
                 postVm.IsCanEdit = true;
 
             return postVm;
         }
 
-        public async Task Create(ExtendedCreatePostDto createPostDto)
+        public async Task Create(CreatePostDTO createPostDto, Guid userId)
         {
             var post = _mapper.Map<Post>(createPostDto);
+            post.UserId = userId;
             post.Preview = TruncateText(post.Message, NumberValues.PostPreviewLength);
 
             await _postRepository.AddAsync(post);
             await _postRepository.SaveChangesAsync();
         }
 
-        public async Task<ValidationResult> CreateComment(CreateCommentDto createCommentDto)
+        public async Task CreateComment(CreateCommentDTO createCommentDto, Guid userId)
         {
-            if (string.IsNullOrEmpty(createCommentDto.Message))
-            {
-                return new ValidationResult(
-                ErrorMessages.CommentEmpty,
-                new[] { nameof(PostDetailsDto.Comments) });
-            }
-
             var comment = _mapper.Map<Comment>(createCommentDto);
-            await _postRepository.CreateComment(comment);
+            comment.UserId = userId;
+            await _commentRepository.AddAsync(comment);
             await _postRepository.SaveChangesAsync();
-
-            return null;
         }
 
-        public async Task<Post> UpdatePost(UpdatePostDto dto)
+        public async Task<Post> UpdatePost(UpdatePostDTO dto)
         {
             var post = await _postRepository.GetById(dto.Id).SingleOrDefaultAsync();
             post.Message = dto.Message;
@@ -120,10 +113,12 @@ namespace Application.Services
         private string TruncateText(string text, int length)
         {
             if (string.IsNullOrEmpty(text) || text.Length <= length)
+            {
                 return text;
+            }
 
             var truncatedText = text.Substring(0, length);
-            truncatedText += "..";
+            truncatedText += "...";
 
             return truncatedText;
         }

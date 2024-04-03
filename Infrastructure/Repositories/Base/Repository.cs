@@ -26,15 +26,15 @@ namespace Infrastructure.Repositories.Base
 
         public async Task<T> AddAsync(T entity)
         {
-            _dbContext.Set<T>().Add(entity);
+            await _dbContext.Set<T>().AddAsync(entity);
             return entity;
         }
-        public async Task UpdateAsync(T entity)
+        public void Update(T entity)
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
         }
 
-        public async Task DeleteAsync(T entity)
+        public void Delete(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
         }
