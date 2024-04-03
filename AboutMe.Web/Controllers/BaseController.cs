@@ -8,7 +8,7 @@ namespace AboutMe.Web.Controllers
         [HttpGet]
         protected IActionResult RedirectToError(string errorMessage)
         {
-            return RedirectToAction(PageNames.Error, ControllerNames.Home, new { message = errorMessage });
+            return RedirectToAction(PageNames.Error.ToString(), ControllerNames.Home.ToString(), new { message = errorMessage });
         }
     }
 }

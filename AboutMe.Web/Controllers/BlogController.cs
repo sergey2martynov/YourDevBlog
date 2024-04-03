@@ -1,4 +1,5 @@
 ﻿using AboutMe.Web.Controllers;
+using AboutMe.Web.Extensions;
 using Application.Dtos.Blog;
 using Application.Interfaces;
 using Application.ViewModels;
@@ -72,7 +73,7 @@ namespace AboutMe.Controllers
             post.IsPrivate = false;
             await _postService.Create(post);
 
-            return RedirectToAction(PageNames.Index);
+            return RedirectToAction(PageNames.Index.ToString());
         }
     }
 }

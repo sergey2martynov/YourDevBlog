@@ -37,9 +37,10 @@ namespace AboutMe.Web.Controllers
                 return RedirectToAction(PageNames.PostDetails, ControllerNames.Blog, new { id = createCommentDto.PostId });
             }
             else
+            if (!ModelState.IsValid)
             {
-                TempData["PostDetailsErrorMessage"] = error.ErrorMessage;
-                return RedirectToAction(PageNames.PostDetails, ControllerNames.Blog, new { Id = createCommentDto.PostId });
+                return RedirectToAction(PageNames.PostDetails.ToString(), ControllerNames.Blog.ToString(),
+                    new { id = createCommentDto.PostId });
             }
         }
 
@@ -64,9 +65,9 @@ namespace AboutMe.Web.Controllers
             }
 
             if(post.IsPrivate)
-                return RedirectToAction(PageNames.Index, ControllerNames.Notes);
+                return RedirectToAction(PageNames.Index.ToString(), ControllerNames.Notes);
 
-            return RedirectToAction(PageNames.Index, ControllerNames.Blog);
+            return RedirectToAction(PageNames.Index.ToString(), ControllerNames.Blog);
         }
 
         [HttpPost]
@@ -83,9 +84,9 @@ namespace AboutMe.Web.Controllers
             await _postRepository.SaveChangesAsync();
 
             if (post.IsPrivate)
-                return RedirectToAction(PageNames.Index, ControllerNames.Notes);
+                return RedirectToAction(PageNames.Index.ToString(), ControllerNames.Notes);
 
-            return RedirectToAction(PageNames.Index, ControllerNames.Blog);
+            return RedirectToAction(PageNames.Index.ToString(), ControllerNames.Blog);
         }
     }
 }

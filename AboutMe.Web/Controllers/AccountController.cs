@@ -24,13 +24,13 @@ namespace AboutMe.Web.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            return View(PageNames.Register);
+            return View(PageNames.Register.ToString());
         }
 
         [HttpGet]
         public IActionResult Login()
         {
-            return View(PageNames.Login);
+            return View(PageNames.Login.ToString());
         }
 
         [HttpPost]
@@ -51,7 +51,7 @@ namespace AboutMe.Web.Controllers
                 if (result.Succeeded )
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction(PageNames.Index, ControllerNames.Home);
+                    return RedirectToAction(PageNames.Index.ToString(), ControllerNames.Home.ToString());
                 }
 
                 foreach (var error in result.Errors)
@@ -87,7 +87,7 @@ namespace AboutMe.Web.Controllers
                     }
                     else
                     {
-                        return RedirectToAction(PageNames.Index, ControllerNames.Blog);
+                        return RedirectToAction(PageNames.Index.ToString(), ControllerNames.Blog.ToString());
                     }
                 }
                 else
@@ -105,7 +105,7 @@ namespace AboutMe.Web.Controllers
         {
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction(PageNames.Index, ControllerNames.Home);
+            return RedirectToAction(PageNames.Index.ToString(), ControllerNames.Home.ToString());
         }
     }
 }

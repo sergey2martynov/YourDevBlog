@@ -7,6 +7,7 @@ using Core.Repositories;
 using Core.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Application.ViewModels;
+using AboutMe.Web.Extensions;
 
 namespace AboutMe.Web.Controllers
 {
@@ -74,7 +75,7 @@ namespace AboutMe.Web.Controllers
             post.IsPrivate = true;
             await _postService.Create(post);
 
-            return RedirectToAction(PageNames.Index);
+            return RedirectToAction(PageNames.Index.ToString());
         }
     }
 }
