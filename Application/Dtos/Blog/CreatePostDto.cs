@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Core.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Dtos.Blog
 {
@@ -8,7 +9,8 @@ namespace Application.Dtos.Blog
         [MaxLength]
         public string Message { get; set; }
         [Required]
-        [MaxLength(132)]
+        [MaxLength(NumberValues.PostTitleLength)]
         public string Title { get; set; }
+        public bool IsPrivate { get; set; }
     }
 }

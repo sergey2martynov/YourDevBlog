@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Core.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Dtos.Blog
 {
@@ -6,9 +7,8 @@ namespace Application.Dtos.Blog
     {
         [Required]
         public Guid PostId { get; set; }
-        public Guid UserId { get; set; }
         [Required]
-        [MaxLength(2200)]
+        [MaxLength(NumberValues.CommentMessageLength)]
         public string Message { get; set; }
     }
 }
