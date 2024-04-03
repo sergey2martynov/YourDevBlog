@@ -25,5 +25,7 @@ services:
       MYSQL_ROOT_PASSWORD: c1234567
     ports:
       - "3306:3306"
+    volumes:
+      - ../var/lib/mysql:/var/lib/mysql
     networks:
       - memohub-network
