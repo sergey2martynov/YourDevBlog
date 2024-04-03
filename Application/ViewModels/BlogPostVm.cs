@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels
 {
-    public class BlogPostVm
+    public class BlogPostVM
     {
         public Guid Id { get; set; }
         public string Preview { get; set; }

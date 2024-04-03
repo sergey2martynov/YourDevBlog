@@ -1,14 +1,14 @@
 ﻿using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
-namespace AboutMe.HelperExtensions
+namespace AboutMe.Web.Extensions
 {
-    public static class DataBaseStartUpHelpers
+    public static class DataBaseStartUpExtension
     {
         public static void SetupDataBase(this IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())
-            {                
+            {
                 try
                 {
                     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();

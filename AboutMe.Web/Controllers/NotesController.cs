@@ -63,7 +63,7 @@ namespace AboutMe.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateNote(CreatePostDto createPostDto)
+        public async Task<IActionResult> CreateNote(CreatePostDTO createPostDto)
         {
             if (!ModelState.IsValid)
             {

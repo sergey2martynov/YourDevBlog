@@ -32,7 +32,7 @@ namespace AboutMe.Controllers
             var userId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var posts = await _postService.GetPublicPostsByUser(userId);
 
-            var blog = new BlogVm
+            var blog = new BlogVM
             {
                 Posts = posts
             };
@@ -61,7 +61,7 @@ namespace AboutMe.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePost(CreatePostDto createPostDto)
+        public async Task<IActionResult> CreatePost(CreatePostDTO createPostDto)
         {
             if (!ModelState.IsValid)
             {

@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels
 {
-    public class UpdatePostVm
+    public class UpdatePostVM
     {
         public Guid Id { get; set; }
         public string Title { get; set; }

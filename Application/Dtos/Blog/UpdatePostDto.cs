@@ -2,7 +2,7 @@
 
 namespace Application.Dtos.Blog
 {
-    public class UpdatePostDto
+    public class UpdatePostDTO
     {
         [Required]
         public Guid Id { get; set; }

@@ -1,7 +1,7 @@
 ﻿namespace Application.ViewModels
 {
-    public class FeedVm
+    public class FeedVM
     {
-        public List<FeedPostVm> Posts { get; set; }
+        public List<FeedPostVM> Posts { get; set; }
     }
 }

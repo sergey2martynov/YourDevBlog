@@ -1,17 +1,21 @@
 ﻿using Core.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure
 {
-    public static class Extensions
+    public static class ServiceExtensions
     {
-        public static IServiceCollection AddContext(this IServiceCollection services, string connectionString)
+        public static IServiceCollection ConfigureDatabase(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
 
+            return services;
+        }
+
+        public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
+        {
             services.AddIdentity<User, Role>(options =>
             {
                 options.Password.RequireDigit = false;

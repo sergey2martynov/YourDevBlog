@@ -1,18 +1,17 @@
 ﻿using Application.Dtos.Blog;
 using Application.ViewModels;
 using Core.Entities;
-using System.ComponentModel.DataAnnotations;
 
 namespace Application.Interfaces
 {
     public interface IPostService
     {
-        Task<List<FeedPostVm>> GetAllPublicPosts();
-        Task<PostDetailsVm> GetPost(Guid id);
-        Task<List<BlogPostVm>> GetPublicPostsByUser(Guid userId);
-        Task<List<PrivatePostVm>> GetPrivatePostsByUser();
-        Task Create(ExtendedCreatePostDto createPostDto);
-        Task<ValidationResult> CreateComment(CreateCommentDto createCommentDto);
-        Task<Post> UpdatePost(UpdatePostDto dto);
+        Task<List<FeedPostVM>> GetAllPublicPosts();
+        Task<PostDetailsVM> GetPost(Guid id, Guid userId);
+        Task<List<BlogPostVM>> GetPublicPostsByUser(Guid userId);
+        Task<List<NoteVM>> GetPrivatePostsByUser(Guid userId);
+        Task Create(CreatePostDTO createPostDto, Guid userId);
+        Task CreateComment(CreateCommentDTO createCommentDto, Guid userId);
+        Task<Post> UpdatePost(UpdatePostDTO dto);
     }
 }

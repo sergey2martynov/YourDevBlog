@@ -77,7 +77,7 @@ namespace AboutMe.Web.Controllers
                     return View(loginDTO);
                 }
 
-                var result = await _signInManager.PasswordSignInAsync(user.UserName, loginDTO.Password, loginDTO.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(user.UserName, loginDTO.Password, loginDTO.IsRememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {

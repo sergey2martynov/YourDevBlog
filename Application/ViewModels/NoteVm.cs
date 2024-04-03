@@ -1,6 +1,6 @@
 ﻿namespace Application.ViewModels
 {
-    public class NoteVm
+    public class NoteVM
     {
         public Guid Id { get; set; }
         public string Preview { get; set; }

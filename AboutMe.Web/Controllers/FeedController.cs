@@ -21,7 +21,7 @@ namespace AboutMe.Web.Controllers
         {
             var isPrivate = false;
             var posts = await _postService.GetAllPublicPosts();
-            var feed = new FeedVm
+            var feed = new FeedVM
             {
                 Posts = posts
             };

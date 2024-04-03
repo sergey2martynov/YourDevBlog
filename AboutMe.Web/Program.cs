@@ -1,7 +1,7 @@
-using AboutMe.HelperExtensions;
 using Infrastructure;
 using Application.AppStart;
 using Core.Mapping;
+using AboutMe.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,19 +9,20 @@ ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
-Configure(app);
+ConfigureApp(app);
 
 app.Run();
 
 void ConfigureServices(IServiceCollection services)
 {
     services.AddRazorPages();
-    services.AddContext(builder.Configuration.GetConnectionString("DefaultConnection"));
+    services.ConfigureDatabase(builder.Configuration.GetConnectionString("DefaultConnection"));
+    services.ConfigureIdentity();
     services.AddServices();
     services.AddAutoMapper(typeof(AutoMapperProfile));
 }
 
-void Configure(WebApplication app)
+void ConfigureApp(WebApplication app)
 {
     app.SetupDataBase();
 

@@ -2,7 +2,7 @@
 
 namespace Application.Dtos.Blog
 {
-    public class CreateCommentDto
+    public class CreateCommentDTO
     {
         [Required]
         public Guid PostId { get; set; }

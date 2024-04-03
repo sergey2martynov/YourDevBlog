@@ -1,7 +1,7 @@
 ﻿namespace Application.ViewModels
 {
-    public class NotesVm
+    public class NotesVM
     {
-        public List<NoteVm> Posts { get; set; }
+        public List<NoteVM> Posts { get; set; }
     }
 }

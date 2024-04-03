@@ -26,7 +26,7 @@ namespace AboutMe.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateComment(CreateCommentDto createCommentDto)
+        public async Task<IActionResult> CreateComment(CreateCommentDTO createCommentDto)
         {
             createCommentDto.UserId = new Guid(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
@@ -48,14 +48,14 @@ namespace AboutMe.Web.Controllers
         public async Task<IActionResult> Update(Guid id)
         {
             var post = await _postRepository.GetById(id)
-                .Select(p => _mapper.Map<UpdatePostVm>(p))
+                .Select(p => _mapper.Map<UpdatePostVM>(p))
                 .SingleOrDefaultAsync();
 
             return View(post);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(UpdatePostDto dto)
+        public async Task<IActionResult> Update(UpdatePostDTO dto)
         {
             var post = await _postService.UpdatePost(dto);
 

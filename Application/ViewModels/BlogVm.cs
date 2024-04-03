@@ -1,7 +1,7 @@
 ﻿namespace Application.ViewModels
 {
-    public class BlogVm
+    public class BlogVM
     {
-        public List<BlogPostVm> Posts { get; set; }
+        public List<BlogPostVM> Posts { get; set; }
     }
 }

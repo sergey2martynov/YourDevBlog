@@ -2,7 +2,7 @@
 
 namespace Application.Dtos.Blog
 {
-    public class CreatePostDto
+    public class CreatePostDTO
     {
         [Required]
         [MaxLength]

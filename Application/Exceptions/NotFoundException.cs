@@ -2,14 +2,14 @@
 {
     public class NotFoundException : Exception
     {
-        public NotFoundException(string entityName, object id)
-            : base($"Entity \"{entityName}\" with ID \"{id}\" was not found.")
+        public NotFoundException(string entityName, Guid entityId)
+            : base($"Entity \"{entityName}\" with ID \"{entityId}\" was not found.")
         {
             EntityName = entityName;
-            EntityId = id;
+            EntityId = entityId;
         }
 
         public string EntityName { get; }
-        public object EntityId { get; }
+        public Guid EntityId { get; }
     }
 }
