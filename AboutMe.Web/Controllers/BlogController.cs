@@ -4,7 +4,7 @@ using Application.Dtos.Blog;
 using Application.Interfaces;
 using Application.ViewModels;
 using AutoMapper;
-using Core.Constants;
+using Core.Enums;
 using Core.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,4 @@
-﻿using Core.Constants;
+﻿using Core.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AboutMe.Web.Controllers

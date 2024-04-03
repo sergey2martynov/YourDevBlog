@@ -1,6 +1,7 @@
 ﻿using Application.Dtos.Identity;
 using Core.Constants;
 using Core.Entities;
+using Core.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

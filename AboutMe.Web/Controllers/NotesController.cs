@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using AutoMapper;
 using Core.Repositories;
-using Core.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Application.ViewModels;
 using AboutMe.Web.Extensions;
+using Core.Enums;
 
 namespace AboutMe.Web.Controllers
 {
