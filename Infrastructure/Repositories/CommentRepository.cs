@@ -9,7 +9,5 @@ namespace Infrastructure.Repositories
         public CommentRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
-
-
     }
 }

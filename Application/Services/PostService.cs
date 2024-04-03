@@ -6,10 +6,7 @@ using AutoMapper;
 using Core.Constants;
 using Core.Entities;
 using Core.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace Application.Services
 {
@@ -21,7 +18,8 @@ namespace Application.Services
 
         public PostService(IPostRepository postRepository,
             IMapper mapper,
-            ICommentRepository commentRepository)
+            ICommentRepository commentRepository
+            )
         {
             _postRepository = postRepository;
             _commentRepository = commentRepository;

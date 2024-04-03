@@ -16,7 +16,8 @@ namespace AboutMe.Web.Controllers
 
         public AccountController(
             UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager
+            )
         {
             _userManager = userManager;
             _signInManager = signInManager;

@@ -1,8 +1,6 @@
 ﻿using Core.Entities;
 using Core.Repositories;
 using Infrastructure.Repositories.Base;
-using Microsoft.EntityFrameworkCore;
-using System.Configuration;
 
 namespace Infrastructure.Repositories
 {

@@ -9,7 +9,6 @@ using Core.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace AboutMe.Web.Controllers
 {
@@ -22,7 +21,8 @@ namespace AboutMe.Web.Controllers
 
         public PostController(IPostService postService,
             IPostRepository postRepository,
-            IMapper mapper)
+            IMapper mapper
+            )
         {
             _postService = postService;
             _postRepository = postRepository;
@@ -85,9 +85,9 @@ namespace AboutMe.Web.Controllers
             await _postRepository.SaveChangesAsync();
 
             if (post.IsPrivate)
-                return RedirectToAction(PageNames.Index.ToString(), ControllerNames.Notes);
+                return RedirectToAction(PageNames.Index.ToString(), ControllerNames.Notes.ToString());
 
-            return RedirectToAction(PageNames.Index.ToString(), ControllerNames.Blog);
+            return RedirectToAction(PageNames.Index.ToString(), ControllerNames.Blog.ToString());
         }
     }
 }

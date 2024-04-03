@@ -16,16 +16,11 @@ namespace AboutMe.Controllers
     public class BlogController : BaseController
     {
         private readonly IPostService _postService;
-        private readonly IPostRepository _postRepository;
-        private readonly IMapper _mapper;
 
-        public BlogController(IPostService postService,
-            IPostRepository postRepository,
-            IMapper mapper) 
+        public BlogController(IPostService postService
+            ) 
         {
             _postService = postService;
-            _postRepository = postRepository;
-            _mapper = mapper;
         }
 
         [HttpGet]

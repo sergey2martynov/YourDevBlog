@@ -1,5 +1,4 @@
-﻿using Core.Entities;
-namespace Application.Dtos.Identity
+﻿namespace Application.Dtos.Identity
 {
     public class LoginDTO
     {

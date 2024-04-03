@@ -1,9 +1,6 @@
 ﻿using Application.Dtos.Blog;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using AutoMapper;
-using Core.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Application.ViewModels;
 using AboutMe.Web.Extensions;
@@ -15,16 +12,11 @@ namespace AboutMe.Web.Controllers
     public class NotesController : BaseController
     {
         private readonly IPostService _postService;
-        private readonly IMapper _mapper;
-        private readonly IPostRepository _postRepository;
 
-        public NotesController(IPostService postService,
-            IMapper mapper,
-            IPostRepository postRepository)
+        public NotesController(IPostService postService
+            )
         {
             _postService = postService;
-            _mapper = mapper;
-            _postRepository = postRepository;
         }
 
         [HttpGet]
