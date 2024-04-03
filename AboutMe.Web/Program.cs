@@ -1,6 +1,7 @@
 using Infrastructure;
 using Application.AppStart;
 using Core.Mapping;
+using AboutMe.Web.Middlewares;
 using AboutMe.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,10 +29,10 @@ void ConfigureApp(WebApplication app)
 
     if (!app.Environment.IsDevelopment())
     {
-        app.UseExceptionHandler("/Error");
-        app.UseHsts();
+        ConfigureProductionEnvironment(app);
     }
 
+    app.UseMiddleware<ErrorHandlingMiddleware>();
     app.UseStaticFiles();
 
     app.UseRouting();
@@ -46,3 +47,10 @@ void ConfigureApp(WebApplication app)
             pattern: "{controller=Home}/{action=Index}/{id?}");
     });
 }
+
+void ConfigureProductionEnvironment(WebApplication app)
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+
