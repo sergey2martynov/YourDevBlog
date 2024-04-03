@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Application.ViewModels.ErrorVM
+@{
     ViewData["Title"] = "Error";
 }
 
@@ -9,6 +10,6 @@
 <body>
     <div class="alert alert-danger" role="alert">
         <h1>Error</h1>
-        <p style="font-size: 32px;">@ViewData["ErrorMessage"]</p>
+        <p style="font-size: 32px;">@Model.Message</p>
     </div>    
 </body>

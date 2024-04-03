@@ -1,6 +1,6 @@
 ﻿namespace Core.Constants
 {
-    public class ErrorMessages
+    internal class ErrorMessages
     {
         public static string PostNotFound = "Post not found";
         public static string CommentEmpty = "Comment can not be empty";
