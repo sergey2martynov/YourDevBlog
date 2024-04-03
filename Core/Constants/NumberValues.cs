@@ -2,6 +2,8 @@
 {
     public static class NumberValues
     {
-        public static int PostPreviewLength = 300;
+        public const int PostPreviewLength = 300;
+        public const int CommentMessageLength = 2200;
+        public const int PostTitleLength = 150;
     }
 }
