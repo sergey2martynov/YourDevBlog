@@ -1,0 +1,31 @@
+﻿@model Application.ViewModels.NotesVM
+@{
+    ViewData["Title"] = "Notes";
+}
+<div class="col-md-12 mb-3">
+    <a class="button" asp-area="" asp-controller="Notes" asp-action="CreateNote" class="button">Create Note</a>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        @foreach (var post in Model.Posts)
+        {
+            <tr>
+                <td>
+                    <div class="blog-item">
+                        <div class="comment-header">
+                            <span class="comment-username"></span>
+                            <span class="comment-date">@post.CreatedOn.ToString("dd.MM.yyyy")</span>
+                        </div>
+                        <a class="post-listing-title-post" asp-area="" asp-controller="Notes" asp-action="NoteDetails" asp-route-id="@post.Id">
+                            @Html.DisplayFor(title => post.Title)
+                        </a>
+                        <div>
+                            @Html.DisplayFor(message => post.Preview)
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

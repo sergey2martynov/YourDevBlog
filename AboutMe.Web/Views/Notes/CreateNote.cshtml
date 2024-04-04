@@ -1,0 +1,50 @@
+﻿@model Application.Dtos.Blog.CreatePostDTO
+@{
+    ViewData["Title"] = "Note";
+}
+
+<h2>Create note</h2>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>Validation errors:</strong>
+        <ul>
+            @foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            }
+        </ul>
+    </div>
+}
+
+<form asp-controller="Notes" asp-action="CreateNote" method="post">
+
+    <div class="form-group">
+        <div class="col-sm-2">
+            <label>Title</label>
+        </div>
+        <input asp-for="Title" class="form-control col-sm-5" />
+    </div>
+
+    <input type="hidden" name="IsPrivate" value="true"/>
+
+    <div class="form-group">
+        <div class="col-sm-2">
+            <label>Message</label>
+        </div>
+        <textarea asp-for="Message" class="form-control col-sm-10"></textarea>
+    </div>
+
+    <div class="form-group col-md-12 mb-3">
+        <div>
+            <button class="button" type="submit">Update</button>
+        </div>
+    </div>
+
+    <input type="hidden" name="IsPrivate" value="true" />
+
+</form>

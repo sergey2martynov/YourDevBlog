@@ -1,0 +1,62 @@
+﻿@model Application.ViewModels.PostDetailsVM
+
+@if(Model.IsCanEdit)
+{
+    <div class="row">
+        <div class="col-1">
+            <a class="button" asp-area="" asp-controller="Post" asp-action="Update" asp-route-id="@Model.Id" class="button">Update</a>
+
+        </div>
+        <div class="col-2">
+            <form asp-area="" asp-controller="Post" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                <button class="button" type="submit">Delete</button>
+            </form>
+        </div>
+    </div>
+}
+
+<h2 class="post-title">@Html.DisplayFor(model => model.Title)</h2>
+<div class="post-message">
+    @Html.DisplayFor(model => model.Message)
+</div>
+
+<div class="comments-section">
+    <h3 class="comments-title">Comments</h3>
+    <ul class="comment-list">
+        @foreach (var comment in Model.Comments)
+        {
+            <li class="comment-item">
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <span class="comment-username">@comment.User.Name</span>
+                        <span class="comment-date">@comment.CreatedOn.ToString("dd.MM.yyyy")</span>
+                    </div>
+                    <div class="comment-message">
+                        <p>@comment.Message</p>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+
+@if (TempData["PostDetailsErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <ul>
+            <li>@TempData["PostDetailsErrorMessage"]</li>
+        </ul>
+    </div>
+}
+
+<form class="comment-form" asp-controller="Post" asp-action="CreateComment" method="post">
+    <div class="form-group">
+        <textarea id="messageInput" name="message" class="form-control" placeholder="Write your comment here..."></textarea>
+        <input type="hidden" name="postId" value="@Model.Id" />
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <button type="submit" class="button btn-dark">Send</button>
+    </div>    
+</form>
+

@@ -1,0 +1,24 @@
+﻿@model Application.ViewModels.UpdatePostVM
+@{
+}
+
+<h3>@Model.Title</h3>
+
+<form asp-controller="Post" asp-action="Update" method="post">
+
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <div class="form-group">
+        <div class="col-sm-2">
+            <label>Message</label>
+        </div>
+        <textarea class="textarea-post" asp-for="Message" class="form-control col-sm-10">@Model.Message</textarea>
+    </div>
+
+    <div class="form-group col-md-12 mb-3">
+        <div>
+            <button class="button" type="submit">Update</button>
+        </div>
+    </div>
+
+</form>
