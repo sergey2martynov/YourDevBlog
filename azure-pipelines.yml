@@ -18,6 +18,3 @@ steps:
     runOptions: 'commands'
     commands:
       ssh root@92.53.104.70 'bash -s' < ./deploy.sh
-
-strategy:
-  parallel: none
