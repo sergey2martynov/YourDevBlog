@@ -17,6 +17,11 @@
 
 <h2 class="post-title">@Html.DisplayFor(model => model.Title)</h2>
 <div class="post-message">
+    @foreach(var file in Model.MediaFileUrls)
+    {
+        <img src="@file" alt="Фото">
+    }
+    
     @Html.DisplayFor(model => model.Message)
 </div>
 

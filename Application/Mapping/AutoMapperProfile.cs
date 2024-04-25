@@ -22,7 +22,8 @@ namespace Core.Mapping
                     },
                     Message = c.Message,
                     CreatedOn = c.CreatedOn
-                })));
+                })))
+                .ForMember(dest => dest.MediaFileUrls, opt => opt.MapFrom(src => src.MediaFiles.Select(f => f.Url)));
             CreateMap<PostDetailsDTO, PostDetailsVM>();
             CreateMap<Post, BlogPostVM>();
             CreateMap<Post, NoteVM>();

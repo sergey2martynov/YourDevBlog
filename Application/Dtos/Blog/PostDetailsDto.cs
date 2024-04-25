@@ -7,5 +7,6 @@
         public string Title { get; set; }
         public List<CommentDTO> Comments { get; set; }
         public Guid UserId { get; set; }
+        public List<string> MediaFileUrls { get; set; }
     }
 }

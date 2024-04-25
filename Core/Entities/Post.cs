@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Core.Entities
+﻿namespace Core.Entities
 {
     public class Post : EntityBase
     {
@@ -11,5 +9,6 @@ namespace Core.Entities
         public bool IsPrivate { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }
+        public ICollection<MediaFile> MediaFiles { get; set; }
     }
 }

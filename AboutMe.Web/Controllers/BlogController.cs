@@ -5,7 +5,6 @@ using Application.Interfaces;
 using Application.ViewModels;
 using AutoMapper;
 using Core.Enums;
-using Core.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -15,12 +14,12 @@ namespace AboutMe.Controllers
     [Authorize]
     public class BlogController : BaseController
     {
-        private readonly IPostService _postService;
+        private readonly IPostService _postService;        
 
         public BlogController(IPostService postService
             ) 
         {
-            _postService = postService;
+            _postService = postService;            
         }
 
         [HttpGet]
