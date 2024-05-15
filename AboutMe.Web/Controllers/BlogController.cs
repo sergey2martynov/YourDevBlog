@@ -1,6 +1,7 @@
 ﻿using AboutMe.Web.Controllers;
 using AboutMe.Web.Extensions;
 using Application.Dtos.Blog;
+using Application.Extensions;
 using Application.Interfaces;
 using Application.ViewModels;
 using AutoMapper;
@@ -55,6 +56,14 @@ namespace AboutMe.Controllers
         {
             if (!ModelState.IsValid)
             {
+                return View(createPostDto);
+            }
+
+            var fileTypes = createPostDto.MediaFiles.Select(f => f.GetFileType());
+
+            if(fileTypes.Any(f => f == MediaFileType.Other))
+            {
+                ModelState.AddModelError("MediaFiles", "Неверный формат файла");
                 return View(createPostDto);
             }
 

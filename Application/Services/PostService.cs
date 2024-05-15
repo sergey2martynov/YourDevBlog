@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.Blog;
 using Application.Exceptions;
+using Application.Extensions;
 using Application.Interfaces;
 using Application.ViewModels;
 using AutoMapper;
@@ -68,40 +69,56 @@ namespace Application.Services
                 .Include(q => q.Comments.OrderBy(c => c.CreatedOn)).ThenInclude(q => q.User)
                 .Include(p => p.User)
                 .Include(p => p.MediaFiles)
-                .Select(p => _mapper.Map<PostDetailsDTO>(p))
-                .SingleOrDefaultAsync();
+                .Select(p => new PostDetailsVM
+                {
+                    Id = p.Id,
+                    Message = p.Message,
+                    Title = p.Title,
+                    Comments = p.Comments.Select(c => new CommentVM
+                    {
+                        User = new UserVM { Name = c.User.UserName},
+                        Message = c.Message,
+                    }).ToList(),
+                    IsCanEdit = p.UserId == userId,
+                    MediaFileUrls = p.MediaFiles.Select(f => new MediaFileVM
+                    {
+                        Url = f.Url,
+                        MediaFileType = f.MediaFileType
+                    }).ToList(),
+                }).SingleOrDefaultAsync();
 
             if (post == null)
             {
                 throw new NotFoundException(nameof(Post), id);
             }
 
-            var postVm = _mapper.Map<PostDetailsVM>(post);            
-
-            if(post.UserId == userId)
-                postVm.IsCanEdit = true;
-
-            return postVm;
+            return post;
         }
 
         public async Task Create(CreatePostDTO createPostDto, Guid userId)
         {
             var post = _mapper.Map<Post>(createPostDto);
             post.UserId = userId;
-            post.Preview = TruncateText(post.Message, NumberValues.PostPreviewLength);
+            post.Preview = TruncateText(post.Message, NumberValues.PostPreviewLength - 2);
+            var files = new List<MediaFile>();
 
-            var url = await _s3Service.UploadMediaToS3(createPostDto.MediaFile);
-
-            var mediaFile = new MediaFile
+            foreach (var mediaFile in createPostDto.MediaFiles)
             {
-                Url = url,
-                ContentType = createPostDto.MediaFile.ContentType,
-                FileName = createPostDto.MediaFile.FileName,
-            };
+                var url = await _s3Service.UploadMediaToS3(mediaFile);
 
-            post.MediaFiles = new List<MediaFile> { mediaFile };
+                var file = new MediaFile
+                {
+                    Url = url,
+                    MediaFileType = mediaFile.GetFileType(),
+                    FileName = mediaFile.FileName
+                };
 
-            await _unitOfWork.MediaFileRepository.AddAsync(mediaFile);
+                files.Add(file);
+            }            
+
+            post.MediaFiles = files;
+
+            await _unitOfWork.MediaFileRepository.AddRangeAsync(files);
             await _unitOfWork.PostRepository.AddAsync(post);
             await _unitOfWork.SaveChangesAsync();            
         }
@@ -118,7 +135,7 @@ namespace Application.Services
         {
             var post = await _unitOfWork.PostRepository.GetById(dto.Id).SingleOrDefaultAsync();
             post.Message = dto.Message;
-            post.Preview = TruncateText(post.Message, NumberValues.PostPreviewLength);
+            post.Preview = TruncateText(post.Message, NumberValues.PostPreviewLength - 2);
             await _unitOfWork.SaveChangesAsync();
 
             return post;
@@ -132,8 +149,7 @@ namespace Application.Services
             }
 
             var truncatedText = text.Substring(0, length);
-            truncatedText += "...";
-
+            truncatedText += "..";
             return truncatedText;
         }
     }

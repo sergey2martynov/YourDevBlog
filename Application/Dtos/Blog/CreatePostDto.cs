@@ -13,6 +13,7 @@ namespace Application.Dtos.Blog
         [MaxLength(NumberValues.PostTitleLength)]
         public string Title { get; set; }
         public bool IsPrivate { get; set; }
-        public IFormFile MediaFile { get; set; }
+        [MaxLength(4)]
+        public List<IFormFile> MediaFiles { get; set; } = new List<IFormFile>();
     }
 }

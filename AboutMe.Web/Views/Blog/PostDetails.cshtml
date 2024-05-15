@@ -17,12 +17,27 @@
 
 <h2 class="post-title">@Html.DisplayFor(model => model.Title)</h2>
 <div class="post-message">
-    @foreach(var file in Model.MediaFileUrls)
-    {
-        <img src="@file" alt="Фото">
-    }
-    
-    @Html.DisplayFor(model => model.Message)
+    <div class="media-container">
+        @foreach (var file in Model.MediaFileUrls)
+        {
+            @if (file.MediaFileType == MediaFileType.Video)
+            {
+                <div class ="video-container">
+                    <video id="myVideo" controls>
+                        <source src="@file.Url" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>                
+            }
+            else
+            {
+                <img class="media-item" src="@file.Url" alt="Фото">
+            }
+        }
+    </div>    
+    <div class="text-container">
+        @Html.DisplayFor(model => model.Message)
+    </div>    
 </div>
 
 <div class="comments-section">
@@ -65,3 +80,18 @@
     </div>    
 </form>
 
+<script>
+    var video = document.getElementById('myVideo');
+
+    video.addEventListener('click', function () {
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.mozRequestFullScreen) { /* Firefox */
+            video.mozRequestFullScreen();
+        } else if (video.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) { /* IE/Edge */
+            video.msRequestFullscreen();
+        }
+    });
+</script>

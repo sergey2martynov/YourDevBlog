@@ -9,22 +9,11 @@ namespace Core.Mapping
     {
         public AutoMapperProfile() 
         {
-            CreateMap<CreatePostDTO, Post>();
+            CreateMap<CreatePostDTO, Post>()
+                .ForMember(dest => dest.MediaFiles, opt => opt.Ignore());
             CreateMap<CreateCommentDTO, Comment>();
             CreateMap<Post, FeedPostVM>()
                 .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User));
-            CreateMap<Post, PostDetailsDTO>()
-                .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments.Select(c => new CommentDTO
-                {
-                    User = new UserVM
-                    {
-                        Name = c.User.UserName
-                    },
-                    Message = c.Message,
-                    CreatedOn = c.CreatedOn
-                })))
-                .ForMember(dest => dest.MediaFileUrls, opt => opt.MapFrom(src => src.MediaFiles.Select(f => f.Url)));
-            CreateMap<PostDetailsDTO, PostDetailsVM>();
             CreateMap<Post, BlogPostVM>();
             CreateMap<Post, NoteVM>();
             CreateMap<Post, UpdatePostVM>();

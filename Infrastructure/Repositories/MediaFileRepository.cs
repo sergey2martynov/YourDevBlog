@@ -9,5 +9,10 @@ namespace Infrastructure.Repositories
         public MediaFileRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
+
+        public async Task AddRangeAsync(IEnumerable<MediaFile> mediaFile)
+        {
+            await _dbContext.AddRangeAsync(mediaFile);
+        }
     }
 }
