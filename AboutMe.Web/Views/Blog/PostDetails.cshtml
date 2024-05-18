@@ -14,6 +14,7 @@
     </div>
 }
 
+
 <h2 class="post-title">@Html.DisplayFor(model => model.Title)</h2>
 <div class="post-message">
     <div class="media-container">
@@ -85,36 +86,3 @@
         <button type="submit" class="button btn-dark">Send</button>
     </div>    
 </form>
-
-<script>
-    let currentMediaIndex = 0;
-    const mediaItems = document.querySelectorAll('.carousel-item');
-
-    function showMedia(index) {
-        mediaItems.forEach((item, i) => {
-            item.classList.toggle('active', i === index);
-        });
-    }
-
-    function nextMedia() {
-        pauseCurrentMedia();
-        currentMediaIndex = (currentMediaIndex + 1) % mediaItems.length;
-        showMedia(currentMediaIndex);
-    }
-
-    function prevMedia() {
-        pauseCurrentMedia();
-        currentMediaIndex = (currentMediaIndex - 1 + mediaItems.length) % mediaItems.length;
-        showMedia(currentMediaIndex);
-    }
-
-    function pauseCurrentMedia() {
-        const currentItem = mediaItems[currentMediaIndex];
-        const video = currentItem.querySelector('video');
-        if (video) {
-            video.pause();
-        }
-    }
-
-    showMedia(currentMediaIndex);
-</script>
