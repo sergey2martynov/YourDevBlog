@@ -4,8 +4,7 @@
 {
     <div class="row">
         <div class="col-1">
-            <a class="button" asp-area="" asp-controller="Post" asp-action="Update" asp-route-id="@Model.Id" class="button">Update</a>
-
+            <a class="button" asp-area="" asp-controller="Post" asp-action="Update" asp-route-id="@Model.Id">Update</a>
         </div>
         <div class="col-2">
             <form asp-area="" asp-controller="Post" asp-action="Delete" asp-route-id="@Model.Id" method="post">
@@ -18,26 +17,34 @@
 <h2 class="post-title">@Html.DisplayFor(model => model.Title)</h2>
 <div class="post-message">
     <div class="media-container">
-        @foreach (var file in Model.MediaFileUrls)
-        {
-            @if (file.MediaFileType == MediaFileType.Video)
-            {
-                <div class ="video-container">
-                    <video id="myVideo" controls>
-                        <source src="@file.Url" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>                
-            }
-            else
-            {
-                <img class="media-item" src="@file.Url" alt="Фото">
-            }
-        }
-    </div>    
+        <div class="carousel">
+            <button class="carousel-button left" onclick="prevMedia()">&#10094;</button>
+            <div class="carousel-inner">
+                @foreach (var file in Model.MediaFileUrls)
+                {
+                    <div class="carousel-item @(file == Model.MediaFileUrls.First() ? "active" : "")">
+                        @if (file.MediaFileType == MediaFileType.Video)
+                        {
+                            <div class="video-container">
+                                <video class="carousel-media" controls>
+                                    <source src="@file.Url" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        }
+                        else
+                        {
+                            <img class="carousel-media" src="@file.Url" alt="Фото">
+                        }
+                    </div>
+                }
+            </div>
+            <button class="carousel-button right" onclick="nextMedia()">&#10095;</button>
+        </div>
+    </div>
     <div class="text-container">
         @Html.DisplayFor(model => model.Message)
-    </div>    
+    </div>
 </div>
 
 <div class="comments-section">
@@ -74,24 +81,40 @@
         <textarea id="messageInput" name="message" class="form-control" placeholder="Write your comment here..."></textarea>
         <input type="hidden" name="postId" value="@Model.Id" />
     </div>
-
     <div class="col-md-12 mb-3">
         <button type="submit" class="button btn-dark">Send</button>
     </div>    
 </form>
 
 <script>
-    var video = document.getElementById('myVideo');
+    let currentMediaIndex = 0;
+    const mediaItems = document.querySelectorAll('.carousel-item');
 
-    video.addEventListener('click', function () {
-        if (video.requestFullscreen) {
-            video.requestFullscreen();
-        } else if (video.mozRequestFullScreen) { /* Firefox */
-            video.mozRequestFullScreen();
-        } else if (video.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-            video.webkitRequestFullscreen();
-        } else if (video.msRequestFullscreen) { /* IE/Edge */
-            video.msRequestFullscreen();
+    function showMedia(index) {
+        mediaItems.forEach((item, i) => {
+            item.classList.toggle('active', i === index);
+        });
+    }
+
+    function nextMedia() {
+        pauseCurrentMedia();
+        currentMediaIndex = (currentMediaIndex + 1) % mediaItems.length;
+        showMedia(currentMediaIndex);
+    }
+
+    function prevMedia() {
+        pauseCurrentMedia();
+        currentMediaIndex = (currentMediaIndex - 1 + mediaItems.length) % mediaItems.length;
+        showMedia(currentMediaIndex);
+    }
+
+    function pauseCurrentMedia() {
+        const currentItem = mediaItems[currentMediaIndex];
+        const video = currentItem.querySelector('video');
+        if (video) {
+            video.pause();
         }
-    });
+    }
+
+    showMedia(currentMediaIndex);
 </script>
