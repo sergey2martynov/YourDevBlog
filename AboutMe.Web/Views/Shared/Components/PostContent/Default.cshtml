@@ -1,0 +1,43 @@
+﻿@model AboutMe.Web.ViewComponents.Models.PostContentModel
+@{
+}
+
+<h2 class="post-title">@Html.DisplayFor(model => model.Title)</h2>
+<div class="post-message">
+    <div class="media-container">
+        <div class="carousel">
+            @if(Model.MediaFileUrls.Count > 1)
+            {
+                <button class="carousel-button left" onclick="prevMedia()">&#10094;</button>
+            }
+            
+            <div class="carousel-inner">
+                @foreach (var file in Model.MediaFileUrls)
+                {
+                    <div class="carousel-item @(file == Model.MediaFileUrls.First() ? "active" : "")">
+                        @if (file.MediaFileType == MediaFileType.Video)
+                        {
+                            <div class="video-container">
+                                <video class="carousel-media" controls>
+                                    <source src="@file.Url" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        }
+                        else
+                        {
+                            <img class="carousel-media" src="@file.Url" alt="Фото">
+                        }
+                    </div>
+                }
+            </div>
+            @if (Model.MediaFileUrls.Count > 1)
+            {
+                <button class="carousel-button right" onclick="nextMedia()">&#10095;</button>
+            }            
+        </div>
+    </div>
+    <div class="text-container">
+        @Html.DisplayFor(model => model.Message)
+    </div>
+</div>

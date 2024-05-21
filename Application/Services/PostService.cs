@@ -78,6 +78,7 @@ namespace Application.Services
                     {
                         User = new UserVM { Name = c.User.UserName},
                         Message = c.Message,
+                        CreatedOn = c.CreatedOn,
                     }).ToList(),
                     IsCanEdit = p.UserId == userId,
                     MediaFileUrls = p.MediaFiles.Select(f => new MediaFileVM

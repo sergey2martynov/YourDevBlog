@@ -4,7 +4,8 @@
 
 @if (!ViewData.ModelState.IsValid)
 {
-    <div class="alert alert-danger" role="alert">
+    <div class="alert-danger" role="alert">
+        <strong>Validation errors:</strong>
         <ul>
             @foreach (var modelState in ViewData.ModelState.Values)
             {
