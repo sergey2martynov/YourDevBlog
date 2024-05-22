@@ -19,16 +19,30 @@ namespace Infrastructure
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Post>(entity =>
+            builder.Entity<Post>(post =>
             {
-                entity.Property(p => p.Title).IsRequired().HasMaxLength(NumberValues.PostTitleLength);
-                entity.Property(p => p.Message).IsRequired();
-                entity.Property(p => p.Preview).IsRequired().HasMaxLength(NumberValues.PostPreviewLength);
+                post.Property(p => p.Title).IsRequired().HasMaxLength(NumberValues.PostTitleMaxLength);
+                post.Property(p => p.Message).IsRequired();
+                post.Property(p => p.Preview).IsRequired().HasMaxLength(NumberValues.PostPreviewMaxLength);
+                post.HasMany(p => p.Comments).WithOne(c => c.Post).HasForeignKey(c => c.PostId).OnDelete(DeleteBehavior.Cascade);
+                post.HasMany(p => p.MediaFiles).WithOne(c => c.Post).HasForeignKey(c => c.PostId).OnDelete(DeleteBehavior.Cascade);
             });
 
-            builder.Entity<Comment>(entity =>
+            builder.Entity<Comment>(comment =>
             {
-                entity.Property(p => p.Message).IsRequired().HasMaxLength(NumberValues.CommentMessageLength);
+                comment.Property(c => c.Message).IsRequired().HasMaxLength(NumberValues.CommentMessageMaxLength);
+            });
+
+            builder.Entity<MediaFile>(file =>
+            {
+                file.Property(f => f.Url).IsRequired().HasMaxLength(NumberValues.MediaFileUrlMaxLength);
+                file.Property(f => f.MediaFileType).HasConversion<int>().IsRequired();
+            });
+
+            builder.Entity<Category>(category =>
+            {
+                category.Property(c => c.Name).IsRequired().HasMaxLength(NumberValues.CategoryNameMaxLength);
+                category.HasIndex(c => c.Name);
             });
         }
     }
