@@ -23,13 +23,7 @@ namespace Application.Services
 
         public async Task<string> UploadMediaToS3(IFormFile file)
         {
-            var credentials = new BasicAWSCredentials(_accessKey, _secretKey);
-            var config = new AmazonS3Config
-            {
-                ServiceURL = "https://s3.timeweb.cloud"
-            };
-
-            var s3Client = new AmazonS3Client(credentials, config);
+            var s3Client = GetS3Client();
             string key = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 
             using (var stream = file.OpenReadStream())
@@ -54,6 +48,44 @@ namespace Application.Services
                         + response.HttpStatusCode);
                 }
             }
+        }
+
+        public async Task DeleteMediaFromS3(IEnumerable<string> fileUrls)
+        {
+            var keys = new List<KeyVersion>();
+
+            foreach(var fileUrl in fileUrls) 
+            {
+                Uri uri = new Uri(fileUrl);
+                string key = uri.PathAndQuery.TrimStart('/');
+                keys.Add(new KeyVersion { Key = key });
+            }            
+
+            var s3Client = GetS3Client();
+
+            var request = new DeleteObjectsRequest
+            {
+                BucketName = _bucketName,
+                Objects = keys
+            };
+
+            var response = await s3Client.DeleteObjectsAsync(request);
+
+            if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new AmazonS3Exception($"Error occurred while deleting file from Amazon S3. HTTP status code: {response.HttpStatusCode}");
+            }
+        }
+
+        private AmazonS3Client GetS3Client()
+        {
+            var credentials = new BasicAWSCredentials(_accessKey, _secretKey);
+            var config = new AmazonS3Config
+            {
+                ServiceURL = "https://s3.timeweb.cloud"
+            };
+
+            return new AmazonS3Client(credentials, config);
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using AboutMe.Web.Extensions;
 using Application.Dtos.Blog;
 using Application.Interfaces;
+using Application.Services;
 using Application.ViewModels;
 using AutoMapper;
 using Core.Constants;
+using Core.Entities;
 using Core.Enums;
 using Core.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -72,16 +74,20 @@ namespace AboutMe.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete([FromServices] IS3Service s3Service, Guid id)
         {
-            var post = await _postRepository.GetById(id).SingleOrDefaultAsync();
+            var post = await _postRepository.GetById(id)
+                .Include(p => p.MediaFiles)
+                .Select(p => new {Id = p.Id, MediaFileUrls = p.MediaFiles.Select(f => f.Url), IsPrivate = p.IsPrivate})
+                .SingleOrDefaultAsync();
 
             if(post == null)
             {
                 return RedirectToError(ErrorMessages.PostNotFound);
             }
 
-            _postRepository.Delete(post);
+            await s3Service.DeleteMediaFromS3(post.MediaFileUrls);
+            _postRepository.Delete(new Post {Id = post.Id });
             await _postRepository.SaveChangesAsync();
 
             if (post.IsPrivate)
