@@ -10,7 +10,7 @@ namespace Application.Dtos.Blog
         [MaxLength]
         public string Message { get; set; }
         [Required]
-        [MaxLength(NumberValues.PostTitleLength)]
+        [MaxLength(NumberValues.PostTitleMaxLength)]
         public string Title { get; set; }
         public bool IsPrivate { get; set; }
         [MaxLength(4)]

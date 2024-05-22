@@ -100,7 +100,7 @@ namespace Application.Services
         {
             var post = _mapper.Map<Post>(createPostDto);
             post.UserId = userId;
-            post.Preview = TruncateText(post.Message, NumberValues.PostPreviewLength - 2);
+            post.Preview = TruncateText(post.Message, NumberValues.PostPreviewMaxLength - 2);
             var files = new List<MediaFile>();
 
             foreach (var mediaFile in createPostDto.MediaFiles)
@@ -136,7 +136,7 @@ namespace Application.Services
         {
             var post = await _unitOfWork.PostRepository.GetById(dto.Id).SingleOrDefaultAsync();
             post.Message = dto.Message;
-            post.Preview = TruncateText(post.Message, NumberValues.PostPreviewLength - 2);
+            post.Preview = TruncateText(post.Message, NumberValues.PostPreviewMaxLength - 2);
             await _unitOfWork.SaveChangesAsync();
 
             return post;

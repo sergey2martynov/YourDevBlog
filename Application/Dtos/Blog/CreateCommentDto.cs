@@ -8,7 +8,7 @@ namespace Application.Dtos.Blog
         [Required]
         public Guid PostId { get; set; }
         [Required]
-        [MaxLength(NumberValues.CommentMessageLength)]
+        [MaxLength(NumberValues.CommentMessageMaxLength)]
         public string Message { get; set; }
     }
 }
