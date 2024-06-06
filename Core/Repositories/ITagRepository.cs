@@ -2,7 +2,7 @@
 
 namespace Core.Repositories
 {
-    public interface ICategoryRepository : IRepository<Category>
+    public interface ITagRepository : IRepository<Tag>
     {
 
     }

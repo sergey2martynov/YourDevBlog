@@ -133,10 +133,7 @@ body {
         width: 100%;
     }
 
-a.button,
-a.button:hover,
-a.button:active,
-a.button:focus {
+a.button {
     display: inline-block;
     background: #e0e0e0;
     border: 1px solid #ccc;
@@ -152,11 +149,9 @@ a.button:focus {
     font-weight: bold;
 }
 
-button.button,
-button.button:hover,
-button.button:active,
-button.button:focus {
+button.button {
     display: inline-block;
+    margin-top: 10px;
     background: #e0e0e0;
     border: 1px solid #ccc;
     border-radius: 0;

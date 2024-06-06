@@ -6,6 +6,7 @@ namespace Core.UnitOfWork
     {
         IPostRepository PostRepository { get; }
         IMediaFileRepository MediaFileRepository { get; }
+        ITagRepository TagRepository { get; }
         Task SaveChangesAsync();
 
         void BeginTransaction();

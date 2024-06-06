@@ -1,0 +1,100 @@
+﻿@model string
+
+<div id="createTagModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Create tag</h2>
+        <div>
+            <input class="form-control" />
+        </div>
+        <div>
+            <button id="submitBtn" class="button">Submit</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var modal = document.getElementById('createTagModal');
+        var span = document.getElementsByClassName('close')[0];
+        var submitBtn = document.getElementById('submitBtn');
+        var input = modal.querySelector('input');
+
+        window.openModal = function () {
+            modal.style.display = 'block';
+        };
+
+        span.onclick = function () {
+            modal.style.display = 'none';
+        };
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        submitBtn.onclick = function () {
+            var inputValue = input.value;
+            console.log(inputValue);
+            fetch('/tag/createTag', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: inputValue
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+            })
+
+            modal.style.display = 'none';
+        };
+    });
+</script>
+
+<style>
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px; /* Adjust the width as needed */
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>

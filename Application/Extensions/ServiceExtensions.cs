@@ -15,6 +15,7 @@ namespace Application.Extensions
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IMediaFileRepository, MediaFileRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IS3Service, S3Service>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

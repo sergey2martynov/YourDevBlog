@@ -8,18 +8,18 @@ namespace Infrastructure
         private readonly AppDbContext _context;
         public  IPostRepository PostRepository { get; }
         public IMediaFileRepository MediaFileRepository { get; }
-        public ICategoryRepository CategoryRepository { get; }
+        public ITagRepository TagRepository { get; }
 
         public UnitOfWork(AppDbContext context,
             IPostRepository postRepository,
             IMediaFileRepository mediaFileRepository,
-            ICategoryRepository categoryRepository
+            ITagRepository tagRepository
             )
         {
             _context = context;
             PostRepository = postRepository;
             MediaFileRepository = mediaFileRepository;
-            CategoryRepository = categoryRepository;
+            TagRepository = tagRepository;
         }
 
         public async Task SaveChangesAsync()

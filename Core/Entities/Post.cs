@@ -10,6 +10,6 @@
         public Guid UserId { get; set; }
         public User User { get; set; }
         public ICollection<MediaFile> MediaFiles { get; set; }
-        public ICollection<Category> Categories { get; set; }
+        public ICollection<Tag> Tags { get; set; }
     }
 }

@@ -39,9 +39,9 @@ namespace Infrastructure
                 file.Property(f => f.MediaFileType).HasConversion<int>().IsRequired();
             });
 
-            builder.Entity<Category>(category =>
+            builder.Entity<Tag>(category =>
             {
-                category.Property(c => c.Name).IsRequired().HasMaxLength(NumberValues.CategoryNameMaxLength);
+                category.Property(c => c.Name).IsRequired().HasMaxLength(NumberValues.TagNameMaxLength);
                 category.HasIndex(c => c.Name);
             });
         }

@@ -1,6 +1,6 @@
 ﻿namespace Core.Entities
 {
-    public class Category : EntityBase
+    public class Tag : EntityBase
     {
         public string Name { get; set; }
         public ICollection<Post> Posts { get; set; }

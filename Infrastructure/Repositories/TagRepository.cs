@@ -4,9 +4,9 @@ using Infrastructure.Repositories.Base;
 
 namespace Infrastructure.Repositories
 {
-    public class CategoryRepository : Repository<Category>, ICategoryRepository
+    public class TagRepository : Repository<Tag>, ITagRepository
     {
-        public CategoryRepository(AppDbContext dbContext) : base(dbContext)
+        public TagRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
     }
